@@ -1,16 +1,17 @@
+import { TUser } from "@/globalInterface/interface";
 import { createSlice } from "@reduxjs/toolkit";
 
 type TInitialState = {
-  user: null;
+  user: TUser | null;
   token: string | null;
-  verify: boolean;
+  collapsed: boolean;
   loading: boolean;
 };
 
 const initialState: TInitialState = {
   user: null,
   token: null,
-  verify: false,
+  collapsed: false,
   loading: false,
 };
 // authentication slice
@@ -27,8 +28,8 @@ export const authSlice = createSlice({
     setLoading: (state, actions) => {
       state.loading = actions.payload;
     },
-    isVerify: (state, actions) => {
-      state.verify = actions.payload;
+    isCollapsed: (state, actions) => {
+      state.collapsed = actions.payload;
     },
     logOut: (state) => {
       state.user = null;
@@ -37,6 +38,6 @@ export const authSlice = createSlice({
     },
   },
 });
-export const { storToken, storUserData, setLoading, isVerify, logOut } =
+export const { storToken, storUserData, setLoading, isCollapsed, logOut } =
   authSlice.actions;
 export default authSlice.reducer;

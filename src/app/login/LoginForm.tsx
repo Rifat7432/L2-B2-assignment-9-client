@@ -1,16 +1,42 @@
 "use client";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { Input, Button } from "@nextui-org/react";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useLoginMutation } from "@/redux/features/auth/authApi";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
+import { useAppDispatch } from "@/redux/hooks/hooks";
+import { storToken, storUserData } from "@/redux/features/auth/authSlice";
+import { TResponse, TUserLoginData } from "@/globalInterface/interface";
 
 const LoginForm = () => {
   const { register, handleSubmit } = useForm();
   const [isVisible, setIsVisible] = useState(false);
-
-  const onSubmit = (data: any) => {
-    console.log(data);
-    // Handle login logic here
+  const [loginUser, { isLoading }] = useLoginMutation();
+  const dispatch = useAppDispatch();
+  const navigate = useRouter();
+  const onSubmit = async (data: FieldValues) => {
+    try {
+      const res = (await loginUser(data)) as TResponse<TUserLoginData>;
+      if (res?.error && !res?.error?.data?.success) {
+        return toast.error(res.error.data.message);
+      }
+      if (res.data.success) {
+        toast.success(res.data.message);
+        navigate.push("/");
+        if (res?.data?.data) {
+          localStorage.setItem("accessToken", res?.data?.data.accessToken);
+          const decoded = jwtDecode(res?.data?.data.accessToken);
+          const { exp, iat, ...rest } = decoded;
+          dispatch(storToken(res?.data?.data.accessToken));
+          return dispatch(storUserData(rest));
+        }
+      }
+    } catch (err) {
+      toast.error("Login Failed");
+    }
   };
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -43,7 +69,7 @@ const LoginForm = () => {
             type={isVisible ? "text" : "password"}
             className="mb-6"
           />
-          <Button type="submit" color="primary">
+          <Button color="primary" type="submit" isLoading={isLoading}>
             Login
           </Button>
         </form>

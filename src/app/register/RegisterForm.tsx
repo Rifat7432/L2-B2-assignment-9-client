@@ -1,18 +1,51 @@
 "use client";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { Input, Button } from "@nextui-org/react";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-
+import React, { useRef } from "react";
+import { useSignUpMutation } from "@/redux/features/auth/authApi";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { TResponse, TUserLoginData } from "@/globalInterface/interface";
 const RegisterForm = () => {
   const { register, handleSubmit } = useForm();
   const [isVisible, setIsVisible] = useState(false);
-
-  const onSubmit = (data: any) => {
-    console.log(data);
-    // Handle login logic here
+  const [img, setImg] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useRouter();
+  const [registerUser, { isLoading }] = useSignUpMutation();
+  const handleFileClick = () => {
+    fileInputRef.current?.click();
   };
-
+  const onSubmit = async (userData: FieldValues) => {
+    if (img) {
+      const formData = new FormData();
+      formData.append("image", img);
+      await fetch(`${process.env.NEXT_PUBLIC_IMGBB_URL}`, {
+        method: "POST",
+        body: formData,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.data.url) {
+            userData.photo = data.data.url;
+          }
+        });
+      try {
+        const res = (await registerUser(userData)) as TResponse<TUserLoginData>;
+        if (res?.error && !res?.error?.data?.success) {
+          return toast.error(res.error.data.message);
+        }
+        if (res.data.success) {
+          toast.success(res.data.message);
+          navigate.push("/login");
+        }
+      } catch (err) {
+        toast.error("Register Failed");
+      }
+    }
+  };
   const toggleVisibility = () => setIsVisible(!isVisible);
   return (
     <div className="max-w-['1000px'] flex items-center lg:w-2/4 md:w-3/4 w-11/12 rounded-lg mx-auto my-20 justify-center bg-cover bg-center bg-[url('https://i.ibb.co/JswfHyT/download-3.jpg')]">
@@ -33,18 +66,25 @@ const RegisterForm = () => {
             placeholder="Enter your email"
             className="mb-6"
           />
-          <label
-            className=" text-xs font-medium text-start text-gray-700 dark:text-white"
-            htmlFor="file_input"
-          ></label>
+          <div onClick={handleFileClick}>
+            <Input
+              readOnly
+              label="Upload Photo"
+              placeholder="Choose a image..."
+              value={img ? img.name : ""}
+              className="cursor-pointer"
+            />
+          </div>
           <input
-            {...register("photo")}
-            className="block w-full 
-            text-md text-gray-700 border border-gray-300 rounded-lg 
-            cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none
-         dark:bg-gray-700 dark:border-gray-700 dark:placeholder-gray-400"
-            id="file_input"
             type="file"
+            style={{ display: "none" }}
+            ref={fileInputRef}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                setImg(file);
+              }
+            }}
           />
           <Input
             label="Password"
@@ -63,8 +103,8 @@ const RegisterForm = () => {
             type={isVisible ? "text" : "password"}
             className="mb-6"
           />
-          <Button type="submit" color="primary">
-            Login
+          <Button type="submit" color="primary" isLoading={isLoading}>
+            Register
           </Button>
         </form>
       </div>
