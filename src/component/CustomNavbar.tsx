@@ -21,7 +21,7 @@ const CustomNavbar = () => {
   const { user, collapsed } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   return (
-    <Navbar className="bg-opacity-25 shadow-md sticky top-0">
+    <Navbar className="bg-opacity-25 shadow-md fixed top-0">
       <NavbarContent className="md:hidden">
         {collapsed ? (
           <ChevronLeft
@@ -85,7 +85,9 @@ const CustomNavbar = () => {
                 <p className="font-semibold">Signed in as</p>
                 <p className="font-semibold">{user?.email}</p>
               </DropdownItem>
-              <DropdownItem key="settings">My Profile</DropdownItem>
+              <DropdownItem as={Link} key="settings" href="/profile">
+                My Profile
+              </DropdownItem>
               <DropdownItem key="team_settings">Team Settings</DropdownItem>
               <DropdownItem key="analytics">Analytics</DropdownItem>
               <DropdownItem>

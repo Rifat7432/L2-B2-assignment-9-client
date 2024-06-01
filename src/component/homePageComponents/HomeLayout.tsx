@@ -1,12 +1,5 @@
 "use client";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  Image,
-  Input,
-} from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { Grid, SearchIcon } from "lucide-react";
 import { FieldValues, useForm } from "react-hook-form";
 import PetCard from "./PetCard";

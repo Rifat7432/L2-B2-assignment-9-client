@@ -3,11 +3,13 @@
 import { TPet } from "@/globalInterface/interface";
 import { useGetPetQuery } from "@/redux/features/pet/petApi";
 import {
+  Button,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
   Image,
+  Link,
 } from "@nextui-org/react";
 import ImageSlider from "./PetSlider";
 
@@ -22,7 +24,7 @@ const PetDetailCard = ({ params }: { params: { petId: string } }) => {
     <Card className="py-6 px-12 md:w-2/4 xl:h-1/3 mx-auto my-20">
       <CardHeader className="pb-0 pt-2 px-4 flex-col sm:flex-row justify-around gap-4 items-start py-3">
         <div>
-          <p className=" uppercase font-bold">Name : {pet.name}</p>
+          <p className="capitalize font-semibold">Name : {pet.name}</p>
           <p className="capitalize font-semibold">Age : {pet.age}</p>
           <h4 className="capitalize font-semibold">Breed : {pet.breed}</h4>
         </div>
@@ -32,11 +34,6 @@ const PetDetailCard = ({ params }: { params: { petId: string } }) => {
         </div>
       </CardHeader>
       <CardBody className="overflow-visible py-2 flex-col items-center justify-center">
-        {/* <Image
-          alt="Card background"
-          className="object-cover rounded-xl"
-          src={pet.photos[0]}
-        /> */}
         <ImageSlider images={pet.photos}></ImageSlider>
       </CardBody>
       <CardFooter className="gap-3">
@@ -45,6 +42,9 @@ const PetDetailCard = ({ params }: { params: { petId: string } }) => {
             <h4 className="text-small font-semibold leading-none text-default-600">
               Location : {pet.location}
             </h4>
+            <h4 className="text-small font-semibold leading-none text-default-600">
+              Temperament : {pet.temperament}
+            </h4>
             <h4>Medical History : {pet.medicalHistory}</h4>
             <h5 className="text-small tracking-tight text-default-400">
               {pet.description}
@@ -52,6 +52,14 @@ const PetDetailCard = ({ params }: { params: { petId: string } }) => {
           </div>
         </div>
       </CardFooter>
+      <Button
+        as={Link}
+        color="primary"
+        variant="flat"
+        href={`/pets/adopt/${params.petId}`}
+      >
+        Adopt
+      </Button>
     </Card>
   );
 };

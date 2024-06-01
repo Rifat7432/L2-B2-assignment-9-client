@@ -2,7 +2,11 @@
 import Image from "next/image";
 import React, { useState } from "react";
 
-const ImageSlider = ({ images }: { images: string[] }) => {
+interface ImageSliderProps {
+  images: string[];
+}
+
+const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const goToPrevious = () => {
@@ -19,19 +23,24 @@ const ImageSlider = ({ images }: { images: string[] }) => {
 
   return (
     <div className="relative w-full max-w-lg mx-auto">
-      <div className="relative h-64 overflow-hidden rounded-lg shadow-lg">
+      <div className="relative h-96 overflow-hidden rounded-lg shadow-lg">
         {images.map((image, index) => (
           <div
             key={index}
             className={`absolute inset-0 transition-transform duration-700 ease-in-out transform ${
-              index === currentIndex ? "translate-x-0" : "translate-x-full"
+              index === currentIndex
+                ? "translate-x-0"
+                : index < currentIndex
+                ? "-translate-x-full"
+                : "translate-x-full"
             }`}
           >
             <Image
               src={image}
               alt={`Slide ${index}`}
-              className="w-full h-full object-cover mx-auto"
+              className="w-full h-full object-cover"
               fill
+              priority
             />
           </div>
         ))}

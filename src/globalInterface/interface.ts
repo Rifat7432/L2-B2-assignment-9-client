@@ -21,6 +21,9 @@ export type TUserLoginData = {
   accessToken: string;
   refreshToken: string;
 };
+export type TUpdateData = {
+  accessToken: string;
+};
 
 export type TUser = {
   userId: string;
@@ -29,6 +32,18 @@ export type TUser = {
   photo: string;
 };
 export type TResponseRedux<T> = TResponse<T> & BaseQueryApi;
+export type TAdopt = {
+  id: string;
+  userId: string;
+  petId: string;
+  status: string;
+  petOwnershipExperience: string;
+  contactInformation: string;
+  isAgreed: boolean;
+  createdAt: string;
+  updatedAt: string;
+  pet: TPet;
+};
 
 export type TPet = {
   id: string;
@@ -43,5 +58,6 @@ export type TPet = {
   description: string;
   temperament: string;
   medicalHistory: string;
-  adoptionRequirements: string;
+  adoptionTerms: string;
+  specialNeeds: boolean;
 };

@@ -20,7 +20,39 @@ const authApi = baseApi.injectEndpoints({
         };
       },
     }),
+    getProfile: builder.query({
+      query: () => {
+        return {
+          url: "/profile",
+          method: "GET",
+        };
+      },
+    }),
+    updateProfile: builder.mutation({
+      query: (updateData) => {
+        return {
+          url: "/profile",
+          method: "PUT",
+          body: updateData,
+        };
+      },
+    }),
+    changePassword: builder.mutation({
+      query: (authData) => {
+        return {
+          url: "/change-password",
+          method: "POST",
+          body: authData,
+        };
+      },
+    }),
   }),
 });
 
-export const { useLoginMutation, useSignUpMutation } = authApi;
+export const {
+  useLoginMutation,
+  useSignUpMutation,
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+  useChangePasswordMutation,
+} = authApi;

@@ -22,10 +22,10 @@ export const petSlice = createSlice({
   name: "product",
   initialState,
   reducers: {
-    storProductsData: (state, actions: PayloadAction<TPet[]>) => {
+    storPetsData: (state, actions: PayloadAction<TPet[]>) => {
       state.value = actions.payload;
     },
-    storProductsAllData: (state, actions: PayloadAction<TPet[]>) => {
+    storPetsAllData: (state, actions: PayloadAction<TPet[]>) => {
       state.all = actions.payload;
     },
     setQuery: (state, actions) => {
@@ -33,6 +33,5 @@ export const petSlice = createSlice({
     },
   },
 });
-export const { storProductsData, storProductsAllData, setQuery } =
-  petSlice.actions;
+export const { storPetsData, storPetsAllData, setQuery } = petSlice.actions;
 export default petSlice.reducer;
