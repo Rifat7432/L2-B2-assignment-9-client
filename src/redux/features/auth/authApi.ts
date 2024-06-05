@@ -10,6 +10,7 @@ const authApi = baseApi.injectEndpoints({
           body: user,
         };
       },
+      invalidatesTags: ["getUser"],
     }),
     signUp: builder.mutation({
       query: (user) => {
@@ -19,6 +20,25 @@ const authApi = baseApi.injectEndpoints({
           body: user,
         };
       },
+      invalidatesTags: ["getUser"],
+    }),
+    makeAdmin: builder.mutation({
+      query: (id) => {
+        return {
+          url: `/register-admin/${id}`,
+          method: "POST",
+        };
+      },
+      invalidatesTags: ["getUser"],
+    }),
+    removeUser: builder.mutation({
+      query: (id) => {
+        return {
+          url: `/delete/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["getUser"],
     }),
     getProfile: builder.query({
       query: () => {
@@ -27,6 +47,16 @@ const authApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
+      providesTags: ["getUser"],
+    }),
+    getAllUsers: builder.query({
+      query: () => {
+        return {
+          url: "/all-profile",
+          method: "GET",
+        };
+      },
+      providesTags: ["getUser"],
     }),
     updateProfile: builder.mutation({
       query: (updateData) => {
@@ -36,6 +66,7 @@ const authApi = baseApi.injectEndpoints({
           body: updateData,
         };
       },
+      invalidatesTags: ["getUser"],
     }),
     changePassword: builder.mutation({
       query: (authData) => {
@@ -45,6 +76,7 @@ const authApi = baseApi.injectEndpoints({
           body: authData,
         };
       },
+      invalidatesTags: ["getUser"],
     }),
   }),
 });
@@ -55,4 +87,7 @@ export const {
   useGetProfileQuery,
   useUpdateProfileMutation,
   useChangePasswordMutation,
+  useGetAllUsersQuery,
+  useMakeAdminMutation,
+  useRemoveUserMutation,
 } = authApi;

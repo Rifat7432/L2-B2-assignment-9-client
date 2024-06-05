@@ -9,23 +9,33 @@ import {
   CardHeader,
   Image,
   Link,
+  Spinner,
   useDisclosure,
 } from "@nextui-org/react";
 import { KeySquare, Pencil } from "lucide-react";
 import ProfileModal from "./ProfileModal";
 import { useState } from "react";
 import UnapprovedRequestList from "./UnapprovedRequestList";
+import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/redux/hooks/hooks";
+import { toast } from "sonner";
 
 const Profile = () => {
+  const navigate = useRouter();
+  const userData = useAppSelector((state) => state.auth.user);
+  if (!userData) {
+    navigate.push("/login");
+    toast.warning("Login First");
+  }
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [title, setTitle] = useState("");
   const { data, isLoading, isError } = useGetProfileQuery({});
   if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isError) {
-    return <div>Error fetching data</div>;
+    return (
+      <div className="w-[90%] mt-96 mx-auto flex flex-col items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
   }
   const user = data.data;
   return (

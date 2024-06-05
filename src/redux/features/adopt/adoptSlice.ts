@@ -1,9 +1,9 @@
-import { TPet } from "@/globalInterface/interface";
+import { TAdopt } from "@/globalInterface/interface";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 type TValue = {
-  allUserAdoptData: TPet[];
-  allAdoptData: TPet[];
+  allUserAdoptData: TAdopt[];
+  allAdoptData: TAdopt[];
 };
 const initialState: TValue = {
   allUserAdoptData: [],
@@ -14,10 +14,10 @@ export const adoptSlice = createSlice({
   name: "product",
   initialState,
   reducers: {
-    storAllUserAdoptData: (state, actions: PayloadAction<TPet[]>) => {
+    storAllUserAdoptData: (state, actions: PayloadAction<TAdopt[]>) => {
       state.allUserAdoptData = actions.payload;
     },
-    storAllAdoptData: (state, actions: PayloadAction<TPet[]>) => {
+    storAllAdoptData: (state, actions: PayloadAction<TAdopt[]>) => {
       state.allAdoptData = actions.payload;
     },
   },

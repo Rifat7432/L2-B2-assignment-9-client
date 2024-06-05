@@ -13,16 +13,22 @@ import {
   User,
   Pagination,
   Chip,
+  Tooltip,
+  useDisclosure,
   Spinner,
 } from "@nextui-org/react";
 import { SearchIcon } from "lucide-react";
+import { TAdopt, TPet, TUserReturn } from "@/globalInterface/interface";
+import { useGetAllAdoptionRequestQuery } from "@/redux/features/adopt/adoptApi";
+import AdoptionRequestModal from "./AdoptionRequestModal";
+import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks/hooks";
-import { TAdopt } from "@/globalInterface/interface";
-import { useGetAllUnapprovedAdoptedRequestQuery } from "@/redux/features/adopt/adoptApi";
+import { toast } from "sonner";
 
 const columns = [
   { name: "NAME", uid: "name" },
   { name: "Contact Information", uid: "contactInformation" },
+  { name: "Pet Ownership Experience", uid: "petOwnershipExperience" },
   { name: "STATUS", uid: "status" },
   { name: "ACTIONS", uid: "actions" },
 ];
@@ -32,26 +38,49 @@ const statusColorMap = {
   PENDING: "warning",
 };
 
-const UnapprovedRequestList = () => {
+const AdminDashboardLayout = () => {
+  const navigate = useRouter();
   const { user } = useAppSelector((state) => state.auth);
-  const { data, isLoading } = useGetAllUnapprovedAdoptedRequestQuery(
-    user?.userId
-  );
+  if (!user) {
+    toast.warning("Login First");
+    navigate.push("/login");
+  } else {
+    if (user.role !== "ADMIN") {
+      navigate.push("/");
+    }
+  }
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { data, isLoading } = useGetAllAdoptionRequestQuery(undefined);
   const [filterValue, setFilterValue] = useState("");
+  const [modalData, setModalData] = useState<{
+    id: string;
+    name: string;
+    petOwnershipExperience: string;
+    contactInformation: string;
+    avatar: string;
+    status: string;
+    pet: TPet;
+    user: TUserReturn;
+  } | null>(null);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [page, setPage] = useState(1);
   const hasSearchFilter = Boolean(filterValue);
   const users = isLoading
     ? []
-    : data?.data.map((userData: TAdopt) => {
+    : data?.data
+    ? data?.data.map((userData: TAdopt) => {
         return {
           id: userData.id,
           name: userData.pet.name,
           contactInformation: userData.contactInformation,
+          petOwnershipExperience: userData.petOwnershipExperience,
           avatar: userData.pet.photos[0],
           status: userData.status,
+          pet: userData.pet,
+          user: userData.user,
         };
-      });
+      })
+    : [];
 
   const filteredItems = useMemo(() => {
     let filteredUsers = [...users];
@@ -78,14 +107,24 @@ const UnapprovedRequestList = () => {
       user: {
         id: string;
         name: string;
-        age: number;
+        petOwnershipExperience: string;
+        contactInformation: string;
         avatar: string;
         status: string;
+        pet: TPet;
+        user: TUserReturn;
       },
       columnKey: string
     ) => {
       const cellValue =
-        user[columnKey as "id" | "name" | "age" | "avatar" | "status"];
+        user[
+          columnKey as
+            | "id"
+            | "name"
+            | "petOwnershipExperience"
+            | "avatar"
+            | "status"
+        ];
 
       switch (columnKey) {
         case "name":
@@ -94,6 +133,18 @@ const UnapprovedRequestList = () => {
               avatarProps={{ radius: "lg", src: user.avatar }}
               name={cellValue}
             ></User>
+          );
+        case "petOwnershipExperience":
+          return (
+            <>
+              {user.petOwnershipExperience.length > 30 ? (
+                <Tooltip content={user.petOwnershipExperience}>
+                  <p>{user.petOwnershipExperience.slice(0, 30)}...</p>
+                </Tooltip>
+              ) : (
+                <p>{user.petOwnershipExperience}</p>
+              )}
+            </>
           );
         case "status":
           return (
@@ -113,7 +164,12 @@ const UnapprovedRequestList = () => {
         case "actions":
           return (
             <div className="relative flex justify-end items-center gap-2">
-              <Button color="primary" variant="light">
+              <Button
+                onPress={onOpen}
+                onClick={() => setModalData(user)}
+                color="primary"
+                variant="light"
+              >
                 Detail
               </Button>
             </div>
@@ -172,7 +228,7 @@ const UnapprovedRequestList = () => {
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {users.length} Unapproved Request
+            Total {users.length} Request
           </span>
           <label className="flex items-center text-default-400 text-small">
             Rows Per Page:
@@ -270,8 +326,19 @@ const UnapprovedRequestList = () => {
           )}
         </TableBody>
       </Table>
+      <div>
+        {modalData ? (
+          <AdoptionRequestModal
+            modalData={modalData}
+            isOpen={isOpen}
+            onOpenChange={onOpenChange}
+          ></AdoptionRequestModal>
+        ) : (
+          ""
+        )}
+      </div>
     </div>
   );
 };
 
-export default UnapprovedRequestList;
+export default AdminDashboardLayout;

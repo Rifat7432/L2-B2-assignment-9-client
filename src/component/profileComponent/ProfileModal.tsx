@@ -26,8 +26,9 @@ export default function ProfileModal({
   onOpenChange: any;
   title: string;
 }) {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const [img, setImg] = useState<File | null>(null);
+  const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [update, { isLoading }] = useUpdateProfileMutation();
   const dispatch = useAppDispatch();
@@ -35,7 +36,6 @@ export default function ProfileModal({
     fileInputRef.current?.click();
   };
   const onSubmit = async (userData: FieldValues) => {
-    console.log(userData, img);
     if (img) {
       const formData = new FormData();
       formData.append("image", img);
@@ -50,6 +50,9 @@ export default function ProfileModal({
           }
         });
     }
+    if (!userData[title]) {
+      return setError(` is required`);
+    }
     const userUpdateData = { [title]: userData[title] };
     try {
       const res = (await update(userUpdateData)) as TResponse<TUpdateData>;
@@ -58,6 +61,11 @@ export default function ProfileModal({
       }
       if (res.data.success) {
         toast.success(res.data.message);
+        reset({
+          name: "",
+          email: "",
+        });
+        setError("");
         if (res?.data?.data) {
           localStorage.setItem("accessToken", res?.data?.data.accessToken);
           const decoded = jwtDecode(res?.data?.data.accessToken);
@@ -82,27 +90,41 @@ export default function ProfileModal({
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Modal Title
+                Update Profile
               </ModalHeader>
               <ModalBody>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   {title === "name" && (
-                    <Input
-                      label="User Name"
-                      {...register("name")}
-                      fullWidth
-                      placeholder="Enter your name"
-                      className="mb-6"
-                    />
+                    <>
+                      <Input
+                        label="User Name"
+                        {...register("name")}
+                        fullWidth
+                        placeholder="Enter your name"
+                        className="mb-6"
+                      />
+                      {error && (
+                        <p className="text-red-600 text-xs">
+                          {title} {error as string}
+                        </p>
+                      )}
+                    </>
                   )}
                   {title === "email" && (
-                    <Input
-                      label="Email"
-                      {...register("email")}
-                      fullWidth
-                      placeholder="Enter your email"
-                      className="mb-6"
-                    />
+                    <>
+                      <Input
+                        label="Email"
+                        {...register("email")}
+                        fullWidth
+                        placeholder="Enter your email"
+                        className="mb-6"
+                      />
+                      {error && (
+                        <p className="text-red-600 text-xs">
+                          {title} {error as string}
+                        </p>
+                      )}
+                    </>
                   )}
                   {title === "photo" && (
                     <>
@@ -114,6 +136,11 @@ export default function ProfileModal({
                           value={img ? img.name : ""}
                           className="cursor-pointer"
                         />
+                        {error && (
+                          <p className="text-red-600 text-xs">
+                            {title} {error as string}
+                          </p>
+                        )}
                       </div>
                       <input
                         type="file"
@@ -135,7 +162,12 @@ export default function ProfileModal({
                 </form>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button
+                  color="danger"
+                  onClick={() => setError("")}
+                  variant="light"
+                  onPress={onClose}
+                >
                   Close
                 </Button>
               </ModalFooter>

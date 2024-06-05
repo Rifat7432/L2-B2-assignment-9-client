@@ -43,6 +43,7 @@ export type TAdopt = {
   createdAt: string;
   updatedAt: string;
   pet: TPet;
+  user: TUserReturn;
 };
 
 export type TPet = {
@@ -60,4 +61,13 @@ export type TPet = {
   medicalHistory: string;
   adoptionTerms: string;
   specialNeeds: boolean;
+  status: string;
+};
+export type TUserReturn = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  photo: string;
+  status: string;
 };

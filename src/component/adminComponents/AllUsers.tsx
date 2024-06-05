@@ -13,43 +13,86 @@ import {
   User,
   Pagination,
   Chip,
+  Tooltip,
   Spinner,
 } from "@nextui-org/react";
-import { SearchIcon } from "lucide-react";
+import { PencilLine, SearchIcon, Trash2 } from "lucide-react";
+import { TResponse, TUserReturn } from "@/globalInterface/interface";
+import { toast } from "sonner";
+import {
+  useGetAllUsersQuery,
+  useMakeAdminMutation,
+  useRemoveUserMutation,
+} from "@/redux/features/auth/authApi";
 import { useAppSelector } from "@/redux/hooks/hooks";
-import { TAdopt } from "@/globalInterface/interface";
-import { useGetAllUnapprovedAdoptedRequestQuery } from "@/redux/features/adopt/adoptApi";
+import { useRouter } from "next/navigation";
 
 const columns = [
   { name: "NAME", uid: "name" },
-  { name: "Contact Information", uid: "contactInformation" },
+  { name: "EMAIL", uid: "email" },
+  { name: "ROLE", uid: "role" },
   { name: "STATUS", uid: "status" },
   { name: "ACTIONS", uid: "actions" },
 ];
 const statusColorMap = {
-  APPROVED: "success",
-  REJECTED: "danger",
-  PENDING: "warning",
+  ACTIVE: "success",
+  INACTIVE: "danger",
 };
-
-const UnapprovedRequestList = () => {
+const AllUsers = () => {
+  const navigate = useRouter();
   const { user } = useAppSelector((state) => state.auth);
-  const { data, isLoading } = useGetAllUnapprovedAdoptedRequestQuery(
-    user?.userId
-  );
+  if (!user) {
+    toast.warning("Login First");
+    navigate.push("/login");
+  } else {
+    if (user.role !== "ADMIN") {
+      navigate.push("/");
+    }
+  }
+  const { data, isLoading } = useGetAllUsersQuery(undefined);
+  const [deleteUser] = useRemoveUserMutation();
+  const [makeUserAdmin] = useMakeAdminMutation();
   const [filterValue, setFilterValue] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [page, setPage] = useState(1);
+  const remove = async (id: string) => {
+    try {
+      const res = (await deleteUser(id)) as TResponse<TUserReturn>;
+      if (res?.error && !res?.error?.data?.success) {
+        return toast.error(res.error.data.message);
+      }
+      if (res.data.success) {
+        toast.success(res.data.message);
+      }
+    } catch (err) {
+      toast.error("Something went wrong");
+    }
+  };
+  const makeAdmin = async (id: string) => {
+    try {
+      const res = (await makeUserAdmin(id)) as TResponse<TUserReturn>;
+      if (res?.error && !res?.error?.data?.success) {
+        return toast.error(res.error.data.message);
+      }
+      if (res.data.success) {
+        toast.success(res.data.message);
+      }
+    } catch (err) {
+      toast.error("Something went wrong");
+    }
+  };
+
   const hasSearchFilter = Boolean(filterValue);
   const users = isLoading
     ? []
-    : data?.data.map((userData: TAdopt) => {
+    : data?.data.map((userData: TUserReturn) => {
         return {
           id: userData.id,
-          name: userData.pet.name,
-          contactInformation: userData.contactInformation,
-          avatar: userData.pet.photos[0],
           status: userData.status,
+          name: userData.name,
+          email: userData.email,
+          role: userData.role,
+          avatar: userData.photo,
         };
       });
 
@@ -58,7 +101,7 @@ const UnapprovedRequestList = () => {
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase())
+        user.email.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
@@ -78,14 +121,17 @@ const UnapprovedRequestList = () => {
       user: {
         id: string;
         name: string;
-        age: number;
+        email: string;
         avatar: string;
+        role: string;
         status: string;
       },
       columnKey: string
     ) => {
       const cellValue =
-        user[columnKey as "id" | "name" | "age" | "avatar" | "status"];
+        user[
+          columnKey as "id" | "name" | "email" | "avatar" | "role" | "status"
+        ];
 
       switch (columnKey) {
         case "name":
@@ -100,9 +146,9 @@ const UnapprovedRequestList = () => {
             <Chip
               className="capitalize"
               color={
-                statusColorMap[
-                  user.status as "PENDING" | "APPROVED" | "REJECTED"
-                ] as "warning" | "danger" | "success"
+                statusColorMap[user.status as "INACTIVE" | "ACTIVE"] as
+                  | "warning"
+                  | "danger"
               }
               size="sm"
               variant="flat"
@@ -113,9 +159,30 @@ const UnapprovedRequestList = () => {
         case "actions":
           return (
             <div className="relative flex justify-end items-center gap-2">
-              <Button color="primary" variant="light">
-                Detail
-              </Button>
+              <div className="relative flex items-center gap-2">
+                <Tooltip color="primary" content="Make user Admin">
+                  <Button
+                    color="primary"
+                    variant="light"
+                    size="sm"
+                    onClick={() => makeAdmin(user.id)}
+                    className="rounded-full"
+                  >
+                    <PencilLine />
+                  </Button>
+                </Tooltip>
+                <Tooltip color="danger" content="Remove user">
+                  <Button
+                    color="danger"
+                    variant="light"
+                    size="sm"
+                    className="rounded-full"
+                    onClick={() => remove(user.id)}
+                  >
+                    <Trash2 />
+                  </Button>
+                </Tooltip>
+              </div>
             </div>
           );
         default:
@@ -159,11 +226,11 @@ const UnapprovedRequestList = () => {
   const topContent = useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
-        <div className="flex justify-center gap-3 items-center">
+        <div className="flex justify-around gap-3 items-center">
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder="Search by name..."
+            placeholder="Search by email..."
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => onClear()}
@@ -172,7 +239,7 @@ const UnapprovedRequestList = () => {
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {users.length} Unapproved Request
+            Total {users.length} Users
           </span>
           <label className="flex items-center text-default-400 text-small">
             Rows Per Page:
@@ -260,7 +327,7 @@ const UnapprovedRequestList = () => {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"No Request Found"} items={items}>
+        <TableBody emptyContent={"No User Found"} items={items}>
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => (
@@ -274,4 +341,4 @@ const UnapprovedRequestList = () => {
   );
 };
 
-export default UnapprovedRequestList;
+export default AllUsers;

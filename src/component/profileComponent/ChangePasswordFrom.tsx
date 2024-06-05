@@ -2,7 +2,6 @@
 
 import { TResponse } from "@/globalInterface/interface";
 import { useChangePasswordMutation } from "@/redux/features/auth/authApi";
-import { useAppDispatch } from "@/redux/hooks/hooks";
 import {
   Button,
   Card,
@@ -18,11 +17,15 @@ import { FieldValues, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const ChangePasswordFrom = () => {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
   const [isVisible, setIsVisible] = useState(false);
   const [isVisibleConform, setIsVisibleConform] = useState(false);
   const [changePassword, { isLoading }] = useChangePasswordMutation();
-  const dispatch = useAppDispatch();
   const navigate = useRouter();
   const onSubmit = async (data: FieldValues) => {
     try {
@@ -31,6 +34,11 @@ const ChangePasswordFrom = () => {
         return toast.error(res.error.data.message);
       }
       if (res.data.success) {
+        reset({
+          email: "",
+          oldPassword: "",
+          newPassword: "",
+        });
         toast.success(res.data.message);
         navigate.push("/profile");
       }
@@ -51,14 +59,23 @@ const ChangePasswordFrom = () => {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <Input
               label="Email"
-              {...register("email")}
+              {...register("email", {
+                required: "Email is required",
+              })}
               fullWidth
               placeholder="Enter your email"
               className="mb-6"
             />
+            {errors.email && (
+              <p className="text-red-600 text-xs">
+                {errors?.email?.message as string}
+              </p>
+            )}
             <Input
               label="Old Password"
-              {...register("oldPassword")}
+              {...register("oldPassword", {
+                required: "Old Password is required",
+              })}
               fullWidth
               placeholder="Enter your previous password"
               endContent={
@@ -73,9 +90,16 @@ const ChangePasswordFrom = () => {
               type={isVisible ? "text" : "password"}
               className="mb-6"
             />
+            {errors.oldPassword && (
+              <p className="text-red-600 text-xs">
+                {errors?.oldPassword?.message as string}
+              </p>
+            )}
             <Input
               label="New Password"
-              {...register("newPassword")}
+              {...register("newPassword", {
+                required: "New Password is required",
+              })}
               fullWidth
               placeholder="Enter your new password"
               endContent={
@@ -90,6 +114,11 @@ const ChangePasswordFrom = () => {
               type={isVisibleConform ? "text" : "password"}
               className="mb-6"
             />
+            {errors.newPassword && (
+              <p className="text-red-600 text-xs">
+                {errors?.newPassword?.message as string}
+              </p>
+            )}
             <Button color="primary" type="submit" isLoading={isLoading}>
               Change Password
             </Button>

@@ -9,6 +9,16 @@ const adoptApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
+      providesTags: ["getAdoptionRequest"],
+    }),
+    getAllAdoptionRequest: builder.query({
+      query: () => {
+        return {
+          url: "adoption-requests",
+          method: "GET",
+        };
+      },
+      providesTags: ["getAdoptionRequest"],
     }),
     getAllUnapprovedAdoptedRequest: builder.query({
       query: (id) => {
@@ -17,6 +27,7 @@ const adoptApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
+      providesTags: ["getAdoptionRequest"],
     }),
     createAdoptRequest: builder.mutation({
       query: (requestData) => {
@@ -26,6 +37,17 @@ const adoptApi = baseApi.injectEndpoints({
           body: requestData,
         };
       },
+      invalidatesTags: ["getAdoptionRequest"],
+    }),
+    updateRequestStatus: builder.mutation({
+      query: (requestData) => {
+        return {
+          url: `/adoption-requests/${requestData.id}`,
+          method: "PUT",
+          body: requestData.status,
+        };
+      },
+      invalidatesTags: ["getAdoptionRequest"],
     }),
   }),
 });
@@ -34,4 +56,6 @@ export const {
   useGetAllAdoptedPetsQuery,
   useCreateAdoptRequestMutation,
   useGetAllUnapprovedAdoptedRequestQuery,
+  useGetAllAdoptionRequestQuery,
+  useUpdateRequestStatusMutation,
 } = adoptApi;

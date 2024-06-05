@@ -15,7 +15,7 @@ import {
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks/hooks";
 import { isCollapsed, logOut } from "@/redux/features/auth/authSlice";
-import { ChevronLeft, Menu } from "lucide-react";
+import { ChevronLeft, Menu, PawPrint } from "lucide-react";
 
 const CustomNavbar = () => {
   const { user, collapsed } = useAppSelector((state) => state.auth);
@@ -32,16 +32,19 @@ const CustomNavbar = () => {
         )}
       </NavbarContent>
       <NavbarBrand>
-        <p className="font-bold text-inherit">Bark Buddies</p>
+        <div className="flex">
+          <PawPrint strokeWidth={2.5} className="w-full mx-1" />
+          <p className="font-bold text-inherit">Bark Buddies</p>
+        </div>
       </NavbarBrand>
 
       <NavbarContent className=" sm:flex gap-4" justify="center">
-        <NavbarItem isActive>
+        <NavbarItem className="hidden sm:block">
           <Button as={Link} href="/" color="primary" variant="light">
             Home
           </Button>
         </NavbarItem>
-        <NavbarItem>
+        <NavbarItem className="hidden sm:block">
           <Button as={Link} href="/about" color="primary" variant="light">
             About Us
           </Button>
@@ -50,20 +53,22 @@ const CustomNavbar = () => {
       <NavbarContent as="div" justify="end">
         {!user && (
           <>
-            <NavbarItem>
+            <NavbarItem className="hidden sm:block">
               <Button as={Link} color="primary" href="/login" variant="flat">
                 Login
               </Button>
             </NavbarItem>
-            <NavbarItem>
+            <NavbarItem className="hidden sm:block">
               <Button as={Link} color="primary" href="/register" variant="flat">
                 Register
               </Button>
             </NavbarItem>
-            <ThemeSwitcher />
+            <div className="hidden sm:block">
+              <ThemeSwitcher />
+            </div>
           </>
         )}
-        {user && (
+        {user ? (
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
               <Avatar
@@ -82,14 +87,35 @@ const CustomNavbar = () => {
               variant="flat"
             >
               <DropdownItem key="profile" className="h-14 gap-2">
-                <p className="font-semibold">Signed in as</p>
+                <p className="font-semibold">Signed in as </p>
                 <p className="font-semibold">{user?.email}</p>
               </DropdownItem>
-              <DropdownItem as={Link} key="settings" href="/profile">
-                My Profile
+              <DropdownItem
+                className="block sm:hidden"
+                as={Link}
+                key="settings"
+                href="/"
+              >
+                Home
               </DropdownItem>
-              <DropdownItem key="team_settings">Team Settings</DropdownItem>
-              <DropdownItem key="analytics">Analytics</DropdownItem>
+              <DropdownItem
+                className="block sm:hidden"
+                as={Link}
+                key="settings"
+                href="/about"
+              >
+                About Us
+              </DropdownItem>
+              {user.role === "ADMIN" ? (
+                <DropdownItem as={Link} href="/dashboard" key="Dashboard">
+                  Dashboard
+                </DropdownItem>
+              ) : (
+                <DropdownItem as={Link} key="settings" href="/profile">
+                  My Profile
+                </DropdownItem>
+              )}
+
               <DropdownItem>
                 <div className="flex justify-around items-center gap-4">
                   <b>Dark Mode</b>
@@ -98,10 +124,7 @@ const CustomNavbar = () => {
                   </div>
                 </div>
               </DropdownItem>
-              <DropdownItem key="configurations">Configurations</DropdownItem>
-              <DropdownItem key="help_and_feedback">
-                Help & Feedback
-              </DropdownItem>
+
               <DropdownItem
                 onClick={() => {
                   dispatch(logOut());
@@ -113,6 +136,58 @@ const CustomNavbar = () => {
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
+        ) : (
+          <div className="block sm:hidden">
+            <Dropdown>
+              <DropdownTrigger>
+                <Menu></Menu>
+              </DropdownTrigger>
+              <DropdownMenu
+                closeOnSelect={false}
+                aria-label="Example with disabled actions"
+              >
+                <DropdownItem></DropdownItem>
+                <DropdownItem
+                  className="block sm:hidden"
+                  as={Link}
+                  key="settings"
+                  href="/"
+                >
+                  Home
+                </DropdownItem>
+                <DropdownItem
+                  className="block sm:hidden"
+                  as={Link}
+                  key="settings"
+                  href="/about"
+                >
+                  About Us
+                </DropdownItem>
+                <DropdownItem>
+                  <div className="flex justify-around items-center gap-4">
+                    <b>Dark Mode</b>
+                    <div className="ml-5">
+                      <ThemeSwitcher />
+                    </div>
+                  </div>
+                </DropdownItem>
+                <DropdownItem
+                  className="block sm:hidden"
+                  as={Link}
+                  href="/login"
+                >
+                  Login
+                </DropdownItem>
+                <DropdownItem
+                  className="block sm:hidden"
+                  as={Link}
+                  href="/register"
+                >
+                  Register
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
         )}
       </NavbarContent>
     </Navbar>

@@ -13,22 +13,30 @@ import {
   User,
   Pagination,
   Link,
+  Spinner,
 } from "@nextui-org/react";
 import { SearchIcon } from "lucide-react";
 import { useGetAllAdoptedPetsQuery } from "@/redux/features/adopt/adoptApi";
 import { useAppSelector } from "@/redux/hooks/hooks";
 import { TAdopt } from "@/globalInterface/interface";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const columns = [
-  { name: "NAME", uid: "name", sortable: true },
-  { name: "AGE", uid: "age", sortable: true },
+  { name: "NAME", uid: "name" },
+  { name: "AGE", uid: "age" },
   { name: "DATE", uid: "date" },
   { name: "ACTIONS", uid: "actions" },
 ];
 
 const AdoptedPetsList = () => {
+  const navigate = useRouter();
   const { user } = useAppSelector((state) => state.auth);
-  const { data, isLoading, error } = useGetAllAdoptedPetsQuery(user?.userId);
+  if (!user) {
+    navigate.push("/login");
+    toast.warning("Login First");
+  }
+  const { data, isLoading } = useGetAllAdoptedPetsQuery(user?.userId);
   const [filterValue, setFilterValue] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [page, setPage] = useState(1);
@@ -221,6 +229,13 @@ const AdoptedPetsList = () => {
       </div>
     );
   }, [items.length, page, pages, hasSearchFilter]);
+  if (isLoading) {
+    return (
+      <div className="w-[90%] mt-96 mx-auto flex flex-col items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
   return (
     <div className="py-6 w-11/12 mx-auto">
       <Table
@@ -240,7 +255,6 @@ const AdoptedPetsList = () => {
             <TableColumn
               key={column.uid}
               align={column.uid === "actions" ? "center" : "start"}
-              allowsSorting={column.sortable}
             >
               {column.name}
             </TableColumn>
