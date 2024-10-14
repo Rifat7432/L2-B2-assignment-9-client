@@ -4,7 +4,7 @@ import { HomeSidebar } from "@/component/sidebar/homeSidebar";
 export default function Home() {
   return (
     <div className="flex relative">
-      <HomeSidebar />
+      {/* <HomeSidebar /> */}
       <HomeLayout />
     </div>
   );

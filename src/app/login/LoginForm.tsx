@@ -1,6 +1,15 @@
 "use client";
 import { FieldValues, useForm } from "react-hook-form";
-import { Input, Button } from "@nextui-org/react";
+import {
+  Input,
+  Button,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@nextui-org/react";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
@@ -12,6 +21,7 @@ import { storToken, storUserData } from "@/redux/features/auth/authSlice";
 import { TResponse, TUserLoginData } from "@/globalInterface/interface";
 
 const LoginForm = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     register,
     handleSubmit,
@@ -44,7 +54,27 @@ const LoginForm = () => {
       toast.error("Login Failed");
     }
   };
-
+  const demoLogin = async (data: { email: string; password: string }) => {
+    try {
+      const res = (await loginUser(data)) as TResponse<TUserLoginData>;
+      if (res?.error && !res?.error?.data?.success) {
+        return toast.error(res.error.data.message);
+      }
+      if (res.data.success) {
+        toast.success(res.data.message);
+        navigate.push("/");
+        if (res?.data?.data) {
+          localStorage.setItem("accessToken", res?.data?.data.accessToken);
+          const decoded = jwtDecode(res?.data?.data.accessToken);
+          const { exp, iat, ...rest } = decoded;
+          dispatch(storToken(res?.data?.data.accessToken));
+          return dispatch(storUserData(rest));
+        }
+      }
+    } catch (err) {
+      toast.error("Login Failed");
+    }
+  };
   const toggleVisibility = () => setIsVisible(!isVisible);
   return (
     <div className="max-w-['1000px'] flex items-center lg:w-2/4 md:w-3/4 w-11/12 rounded-lg mx-auto my-20 justify-center bg-cover bg-center bg-[url('https://i.ibb.co/fDwj3bd/images.jpg')]">
@@ -95,10 +125,87 @@ const LoginForm = () => {
             )}
           </div>
 
-          <Button color="primary" type="submit" isLoading={isLoading}>
+          <Button
+            color="primary"
+            type="submit"
+            className="w-11/12 my-2"
+            isLoading={isLoading}
+          >
             Login
           </Button>
         </form>
+        <Button
+          className="w-11/12 my-2"
+          color="primary"
+          variant="flat"
+          onPress={() => onOpen()}
+        >
+          Use Demo Account
+        </Button>
+        <Modal size={"lg"} isOpen={isOpen} onClose={onClose}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1">
+                  Modal Title
+                </ModalHeader>
+                <ModalBody>
+                  <h3 className="font-bold text-xl">
+                    Login with Demo Accounts!
+                  </h3>
+                  <div className="flex justify-between items-center p-5">
+                    <div>
+                      <h4 className="text-lg font-medium">Admin Account</h4>
+                      <p className="text-md font-thin">
+                        Email : admin@gmail.com
+                      </p>
+                      <p>Password : 123456</p>
+                    </div>
+                    <div>
+                      <Button
+                        color="secondary"
+                        variant="ghost"
+                        onPress={onClose}
+                        onClick={() =>
+                          demoLogin({
+                            email: "admin@gmail.com",
+                            password: "123456",
+                          })
+                        }
+                      >
+                        Login
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center p-5">
+                    <div>
+                      <h4 className="text-lg font-medium">User Account</h4>
+                      <p className="text-md font-thin">
+                        Email : user@gmail.com
+                      </p>
+                      <p>Password : 123456</p>
+                    </div>
+                    <div>
+                      <Button
+                        color="secondary"
+                        variant="ghost"
+                        onPress={onClose}
+                        onClick={() =>
+                          demoLogin({
+                            email: "user@gmail.com",
+                            password: "123456",
+                          })
+                        }
+                      >
+                        Login
+                      </Button>
+                    </div>
+                  </div>
+                </ModalBody>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export type TQuery = {
   gender?: string;
-  special?: string;
+  species?: string;
   size?: string;
   searchTerm?: string;
 };

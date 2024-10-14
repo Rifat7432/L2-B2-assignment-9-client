@@ -86,14 +86,14 @@ const CustomNavbar = () => {
               closeOnSelect={false}
               variant="flat"
             >
-              <DropdownItem key="profile" className="h-14 gap-2">
+              <DropdownItem key="info" className="h-14 gap-2">
                 <p className="font-semibold">Signed in as </p>
                 <p className="font-semibold">{user?.email}</p>
               </DropdownItem>
               <DropdownItem
                 className="block sm:hidden"
                 as={Link}
-                key="settings"
+                key="home"
                 href="/"
               >
                 Home
@@ -101,7 +101,7 @@ const CustomNavbar = () => {
               <DropdownItem
                 className="block sm:hidden"
                 as={Link}
-                key="settings"
+                key="about"
                 href="/about"
               >
                 About Us
@@ -111,7 +111,7 @@ const CustomNavbar = () => {
                   Dashboard
                 </DropdownItem>
               ) : (
-                <DropdownItem as={Link} key="settings" href="/profile">
+                <DropdownItem as={Link} key="profile" href="/profile">
                   My Profile
                 </DropdownItem>
               )}
@@ -150,7 +150,7 @@ const CustomNavbar = () => {
                 <DropdownItem
                   className="block sm:hidden"
                   as={Link}
-                  key="settings"
+                  key="home"
                   href="/"
                 >
                   Home
@@ -158,7 +158,7 @@ const CustomNavbar = () => {
                 <DropdownItem
                   className="block sm:hidden"
                   as={Link}
-                  key="settings"
+                  key="about"
                   href="/about"
                 >
                   About Us
@@ -175,6 +175,7 @@ const CustomNavbar = () => {
                   className="block sm:hidden"
                   as={Link}
                   href="/login"
+                  key="login"
                 >
                   Login
                 </DropdownItem>
@@ -182,6 +183,7 @@ const CustomNavbar = () => {
                   className="block sm:hidden"
                   as={Link}
                   href="/register"
+                  key="register"
                 >
                   Register
                 </DropdownItem>
