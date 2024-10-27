@@ -51,7 +51,7 @@ const AdoptionRequestModal = ({
     };
     try {
       const res = (await changeStatus(updatedData)) as TResponse<TAdopt>;
-      console.log(res);
+    
       if (res?.error && !res?.error?.data?.success) {
         return toast.error(res.error.data.message);
       }

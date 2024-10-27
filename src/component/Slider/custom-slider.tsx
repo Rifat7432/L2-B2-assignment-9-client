@@ -1,113 +1,90 @@
-import { useState, useEffect, ReactNode } from "react";
+import * as React from "react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { wrap } from "popmotion";
 
-import "./custom-slider.css";
 
-function CustomCarousel({ children }: { children: ReactNode[] }) {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [slideDone, setSlideDone] = useState(true);
-  const [timeID, setTimeID] = useState<NodeJS.Timeout | null>(null);
+const variants = {
+  enter: (direction: number) => {
+    return {
+      x: direction > 0 ? 1000 : -1000,
+      opacity: 0
+    };
+  },
+  center: {
+    zIndex: 1,
+    x: 0,
+    opacity: 1
+  },
+  exit: (direction: number) => {
+    return {
+      zIndex: 0,
+      x: direction < 0 ? 1000 : -1000,
+      opacity: 0
+    };
+  }
+};
 
-  useEffect(() => {
-    if (slideDone) {
-      setSlideDone(false);
-      const timeoutId = setTimeout(() => {
-        slideNext();
-        setSlideDone(true);
-      }, 5000);
+/**
+ * Experimenting with distilling swipe offset and velocity into a single variable, so the
+ * less distance a user has swiped, the more velocity they need to register as a swipe.
+ * Should accomodate longer swipes and short flicks without having binary checks on
+ * just distance thresholds and velocity > 0.
+ */
+const swipeConfidenceThreshold = 10000;
+const swipePower = (offset: number, velocity: number) => {
+  return Math.abs(offset) * velocity;
+};
 
-      setTimeID(timeoutId);
-    }
-  }, [slideDone]);
+export const Example = ({images}:{images:string[]}) => {
+  const [[page, direction], setPage] = useState([0, 0]);
 
-  const slideNext = () => {
-    setActiveIndex((val) => {
-      if (val >= children.length - 1) {
-        return 0;
-      } else {
-        return val + 1;
-      }
-    });
-  };
+  // We only have 3 images, but we paginate them absolutely (ie 1, 2, 3, 4, 5...) and
+  // then wrap that within 0-2 to find our image ID in the array below. By passing an
+  // absolute page index as the `motion` component's `key` prop, `AnimatePresence` will
+  // detect it as an entirely new image. So you can infinitely paginate as few as 1 images.
+  const imageIndex = wrap(0, images.length, page);
 
-  const slidePrev = () => {
-    setActiveIndex((val) => {
-      if (val <= 0) {
-        return children.length - 1;
-      } else {
-        return val - 1;
-      }
-    });
-  };
-
-  const AutoPlayStop = () => {
-    if ((timeID as unknown as number) > 0) {
-      clearTimeout(timeID as unknown as number);
-      setSlideDone(false);
-    }
-  };
-
-  const AutoPlayStart = () => {
-    if (!slideDone) {
-      setSlideDone(true);
-    }
+  const paginate = (newDirection: number) => {
+    setPage([page + newDirection, newDirection]);
   };
 
   return (
-    <div
-      className="container__slider rounded-xl"
-      onMouseEnter={AutoPlayStop}
-      onMouseLeave={AutoPlayStart}
-    >
-      {children.map((item, index) => {
-        return (
-          <div
-            className={"slider__item slider__item-active- rounded-xl" + (activeIndex + 1)}
-            key={index}
-          >
-            {item}
-          </div>
-        );
-      })}
+    <>
+      <AnimatePresence initial={false} custom={direction}>
+        <motion.img
+        className="object-fill h-full w-full"
+          key={page}
+          src={images[imageIndex]}
+          custom={direction}
+          variants={variants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{
+            x: { type: "spring", stiffness: 300, damping: 30 },
+            opacity: { duration: 0.2 }
+          }}
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={1}
+          onDragEnd={(e, { offset, velocity }) => {
+            const swipe = swipePower(offset.x, velocity.x);
 
-      <div className="container__slider__links rounded-xl">
-        {children.map((_item, index) => {
-          return (
-            <button
-              key={index}
-              className={
-                activeIndex === index
-                  ? "container__slider__links-small container__slider__links-small-active rounded-xl"
-                  : "container__slider__links-small rounded-xl"
-              }
-              onClick={(e) => {
-                e.preventDefault();
-                setActiveIndex(index);
-              }}
-            ></button>
-          );
-        })}
+            if (swipe < -swipeConfidenceThreshold) {
+              paginate(1);
+            } else if (swipe > swipeConfidenceThreshold) {
+              paginate(-1);
+            }
+          }}
+        />
+      </AnimatePresence>
+      <div className="next" onClick={() => paginate(1)}>
+        {"‣"}
       </div>
-
-      <button
-        className="slider__btn-next"
-        onClick={(e) => {
-          e.preventDefault();
-          slideNext();
-        }}
-      >
-        {">"}
-      </button>
-      <button
-        className="slider__btn-prev"
-        onClick={(e) => {
-          e.preventDefault();
-          slidePrev();
-        }}
-      >
-        {"<"}
-      </button>
-    </div>
+      <div className="prev" onClick={() => paginate(-1)}>
+        {"‣"}
+      </div>
+    </>
   );
-}
-
-export default CustomCarousel;
+};

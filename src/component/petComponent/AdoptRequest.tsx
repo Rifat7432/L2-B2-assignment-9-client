@@ -20,13 +20,19 @@ import { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+
 const AdoptRequest = ({ params }: { params: { petId: string } }) => {
+    const navigate = useRouter();
+    const { user } = useAppSelector((state) => state.auth);
+    if (!user) {
+      toast.warning("Login First");
+      navigate.push("/login");
+    }
   const [open, setOpen] = useState(false);
   const { register, handleSubmit, reset } = useForm();
   const email = useAppSelector((state) => state.auth.user?.email);
   const [createRequest, { isLoading }] = useCreateAdoptRequestMutation();
   const { data, isLoading: dataLoading } = useGetPetQuery(params.petId);
-  const navigate = useRouter();
   const onSubmit = async (userData: FieldValues) => {
     const requestData = {
       ...userData,

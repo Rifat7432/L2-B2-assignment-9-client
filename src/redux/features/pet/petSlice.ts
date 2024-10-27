@@ -11,11 +11,13 @@ type TValue = {
   value: TPet[];
   all: TPet[];
   querys: TQuery;
+  otherQuery: TQuery;
 };
 const initialState: TValue = {
   value: [],
   all: [],
   querys: {},
+  otherQuery:{}
 };
 // product slice
 export const petSlice = createSlice({
@@ -31,7 +33,10 @@ export const petSlice = createSlice({
     setQuery: (state, actions) => {
       state.querys = actions.payload;
     },
+    setOtherQuery: (state, actions) => {
+      state.otherQuery = actions.payload;
+    },
   },
 });
-export const { storPetsData, storPetsAllData, setQuery } = petSlice.actions;
+export const { storPetsData, storPetsAllData, setQuery ,setOtherQuery} = petSlice.actions;
 export default petSlice.reducer;

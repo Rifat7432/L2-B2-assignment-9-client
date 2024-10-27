@@ -11,6 +11,9 @@ import SuccessStories from "./SuccessStories";
 import AdoptionTips from "./AdoptionTips";
 import Slider from "../Slider/Slideer";
 import { removeDuplicates } from "@/utils/removeDublicat";
+import WhyAdopt from "./WhyAdopt";
+import AdoptionProcessOverview from "./AdoptionProcess";
+
 
 const HomeLayout = () => {
   const query = useAppSelector((state) => state.pet.querys);
@@ -35,7 +38,7 @@ const HomeLayout = () => {
   const filteredArraySpecies: string[] = removeDuplicates(
     petsQuery?.data.map((element: TPet) => element.species)
   );
-  //   console.log(filteredArray);
+ 
   const species = filteredArraySpecies.map((species: string) => {
     return { key: species, label: species.toUpperCase() };
   });
@@ -163,13 +166,15 @@ const HomeLayout = () => {
           ))}
         </Select>
       </div>
-      <div className="grid lg:grid-cols-2 xl:grid-cols-3 sm:grid-cols-1 gap-6 w-11/12 mx-auto my-10">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:grid-cols-1 gap-6 w-11/12 mx-auto my-10">
         {pets?.data.map((pet: TPet) => (
           <PetCard key={pet.id} pet={pet} />
         ))}
       </div>
       <SuccessStories />
       <AdoptionTips />
+      <WhyAdopt/>
+      <AdoptionProcessOverview/>
     </div>
   );
 };

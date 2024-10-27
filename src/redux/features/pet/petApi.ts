@@ -1,6 +1,5 @@
 import { baseApi } from "@/redux/services/API";
 
-
 const petApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllPets: builder.query({
@@ -51,6 +50,24 @@ const petApi = baseApi.injectEndpoints({
       },
       providesTags: ["getPets"],
     }),
+    getUserOverview: builder.query({
+      query: (id) => {
+        return {
+          url: `/user-overview/${id}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["getPets"],
+    }),
+    getAdminOverview: builder.query({
+      query: () => {
+        return {
+          url: "admin-overview",
+          method: "GET",
+        };
+      },
+      providesTags: ["getPets", "getUser", "getAdoptionRequest"],
+    }),
   }),
 });
 
@@ -60,4 +77,6 @@ export const {
   useCreatePetMutation,
   useUpdatePetMutation,
   useDeletePetMutation,
+  useGetUserOverviewQuery,
+  useGetAdminOverviewQuery,
 } = petApi;

@@ -19,13 +19,18 @@ const persistConfig = {
   key: "auth",
   storage,
 };
+const petPersistConfig = {
+  key: "pet",
+  storage,
+};
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);
+const persistedPetReducer = persistReducer(petPersistConfig, petReducer);
 // global storage
 export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
     auth: persistedAuthReducer,
-    pet: petReducer,
+    pet: persistedPetReducer,
     adopt: adoptReducer,
   },
   middleware: (getDefaultMiddleware) =>

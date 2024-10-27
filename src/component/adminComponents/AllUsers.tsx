@@ -55,6 +55,7 @@ const AllUsers = () => {
   const [filterValue, setFilterValue] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [page, setPage] = useState(1);
+ 
   const remove = async (id: string) => {
     try {
       const res = (await deleteUser(id)) as TResponse<TUserReturn>;

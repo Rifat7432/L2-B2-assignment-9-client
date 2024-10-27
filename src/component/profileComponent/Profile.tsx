@@ -2,6 +2,7 @@
 
 import { useGetProfileQuery } from "@/redux/features/auth/authApi";
 import {
+  Avatar,
   Button,
   Card,
   CardBody,
@@ -29,7 +30,8 @@ const Profile = () => {
   }
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [title, setTitle] = useState("");
-  const { data, isLoading, isError } = useGetProfileQuery({});
+  const [disable, setDisable] = useState(false);
+  const { data, isLoading } = useGetProfileQuery({});
   if (isLoading) {
     return (
       <div className="w-[90%] mt-96 mx-auto flex flex-col items-center justify-center">
@@ -40,57 +42,69 @@ const Profile = () => {
   const user = data.data;
   return (
     <div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 p-12 gap-4">
-        <Card className="py-4">
-          <CardHeader className="pb-0 flex-col items-center">
-            <div className="relative">
+      <div className="grid grid-cols-1 p-12 gap-4">
+        <Card className="py-4  relative">
+          <CardHeader className="pb-0 flex-col items-center w-full mx-auto md:w-[900px] h-[300px]">
+            <div className="w-full ">
               <Image
-                alt="Card background"
-                className="object-cover w-full h-96 rounded-xl z-20 hover:z-0"
-                src={user.photo}
+                className="md:w-[900px] h-[300px] w-full object-cover"
+                src="https://res.cloudinary.com/dqbtjunza/image/upload/v1730038419/images_ye6pm4.jpg"
+                alt="banner"
               />
-              <Button
-                onPress={onOpen}
-                className="rounded-full absolute top-1 right-1 z-10 hover:z-30 text-white"
-                variant="light"
-                color="primary"
-                size="sm"
-                onClick={() => setTitle("photo")}
-              >
-                <Pencil />
-              </Button>
             </div>
           </CardHeader>
-          <CardBody className="overflow-visible py-2 flex-col gap-4">
-            <div className="px-5">
-              <div className="  w-full flex justify-between items-center">
-                <h4 className="font-semibold  w-2/4 leading-none text-default-600">
-                  Name : {user.name}
-                </h4>
-
-                <Button
-                  size="sm"
-                  onPress={onOpen}
-                  className="rounded-full"
-                  variant="light"
-                  color="primary"
-                  onClick={() => setTitle("name")}
+          <CardBody className="overflow-visible py-2 sm:px-10 flex-col gap-4">
+            <div className="flex lg:gap-10 gap-5 items-center lg:flex-row flex-col px-10">
+              <div className="w-40 h-40">
+                <button
+                  className="rounded-full absolute lg:bottom-14 bottom-36 z-20 bg-white"
+                  onClick={() => {
+                    setTitle("photo");
+                    onOpen();
+                  }}
                 >
-                  <Pencil />
-                </Button>
+                  <Avatar
+                    isDisabled={disable}
+                    onMouseEnter={() => setDisable(true)}
+                    onMouseLeave={() => setDisable(false)}
+                    isBordered
+                    color="primary"
+                    className="w-40 h-40 text-large"
+                    src={user.photo}
+                  />
+                </button>
               </div>
-              <div className="w-full flex justify-between items-center">
-                <h5>Email : {user.email}</h5>
-                <Button
-                  size="sm"
-                  onPress={onOpen}
-                  className="rounded-full"
-                  variant="light"
-                  color="primary"
-                  onClick={() => setTitle("email")}
-                >
-                  <Pencil />
-                </Button>
+
+              <div className="px-5">
+                <div className="  w-full gap-5 flex justify-between items-center">
+                  <h4 className="font-semibold  w-2/4 leading-none text-default-600">
+                    {user.name}
+                  </h4>
+
+                  <Button
+                    size="sm"
+                    onPress={onOpen}
+                    className="rounded-full"
+                    variant="light"
+                    color="primary"
+                    onClick={() => setTitle("name")}
+                  >
+                    <Pencil />
+                  </Button>
+                </div>
+                <div className="w-full flex justify-between items-center">
+                  <h5>Email : {user.email}</h5>
+                  <Button
+                    size="sm"
+                    onPress={onOpen}
+                    className="rounded-full"
+                    variant="light"
+                    color="primary"
+                    onClick={() => setTitle("email")}
+                  >
+                    <Pencil />
+                  </Button>
+                </div>
               </div>
             </div>
           </CardBody>

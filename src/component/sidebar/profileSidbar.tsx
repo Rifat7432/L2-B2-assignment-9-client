@@ -25,6 +25,12 @@ export const ProfileSidebar = () => {
               <>
                 <SidebarItem
                   icon={<PawPrint />}
+                  title={"Overview"}
+                  isActive={pathname === "/adminOverview"}
+                  href={"/adminOverview"}
+                />
+                <SidebarItem
+                  icon={<PawPrint />}
                   title={"All Adoption Request"}
                   isActive={pathname === "/dashboard"}
                   href={"/dashboard"}
@@ -43,7 +49,14 @@ export const ProfileSidebar = () => {
                 />
               </>
             )}
-
+            {user?.role !== "ADMIN" && 
+            <SidebarItem
+              icon={<PawPrint />}
+              title={"Overview"}
+              isActive={pathname === "/userOverview"}
+              href={"/userOverview"}
+            />
+            }
             <SidebarItem
               icon={<Cat />}
               title={"My Adopted Pets"}

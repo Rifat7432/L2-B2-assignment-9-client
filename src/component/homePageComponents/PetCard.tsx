@@ -1,5 +1,7 @@
 "use client";
 import { TPet } from "@/globalInterface/interface";
+import { setOtherQuery } from "@/redux/features/pet/petSlice";
+import { useAppDispatch } from "@/redux/hooks/hooks";
 import {
   Card,
   CardBody,
@@ -10,8 +12,10 @@ import {
 } from "@nextui-org/react";
 
 const PetCard = ({ pet }: { pet: TPet }) => {
+  const dispatch = useAppDispatch();
+
   return (
-    <Card className="py-4 px-2 xl:w-full w-80 mx-auto">
+    <Card className="py-4 px-2 xl:w-full sm:w-72 w-full mx-auto">
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
         <p className="text-tiny uppercase font-bold">Name : {pet.name}</p>
         <small className="text-default-500">Age : {pet.age}</small>
@@ -33,7 +37,20 @@ const PetCard = ({ pet }: { pet: TPet }) => {
             <h5 className="text-small tracking-tight text-default-400">
               {pet.description.slice(0, 50)}...
             </h5>
-            <Link href={`/pets/${pet.id}`}>See more...</Link>
+            <Link
+              onClick={() =>
+                dispatch(
+                  setOtherQuery({
+                    gender: pet.gender,
+                    species: pet.species,
+                    size: pet.size,
+                  })
+                )
+              }
+              href={`/pets/${pet.id}`}
+            >
+              See more...
+            </Link>
           </div>
         </div>
       </CardFooter>

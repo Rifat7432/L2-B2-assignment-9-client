@@ -31,6 +31,14 @@ export type TUser = {
   role: string;
   photo: string;
 };
+export type TAdminUser = {
+  userId: string;
+  email: string;
+  role: string;
+  photo: string;
+  createdAt: string;
+  updatedAt: string;
+};
 export type TResponseRedux<T> = TResponse<T> & BaseQueryApi;
 export type TAdopt = {
   id: string;
