@@ -38,8 +38,9 @@ const CustomNavbar = () => {
         </div>
       </NavbarBrand>
 
-      <NavbarContent className=" sm:flex gap-4" justify="center">
-        <NavbarItem className="hidden sm:block">
+
+      <NavbarContent as="div" justify="end">
+      <NavbarItem className="hidden sm:block">
           <Button as={Link} href="/" color="primary" variant="light">
             Home
           </Button>
@@ -49,8 +50,6 @@ const CustomNavbar = () => {
             About Us
           </Button>
         </NavbarItem>
-      </NavbarContent>
-      <NavbarContent as="div" justify="end">
         {!user && (
           <>
             <NavbarItem className="hidden sm:block">
@@ -107,7 +106,7 @@ const CustomNavbar = () => {
                 About Us
               </DropdownItem>
               {user.role === "ADMIN" ? (
-                <DropdownItem as={Link} href="/dashboard" key="Dashboard">
+                <DropdownItem as={Link} href="/adminOverview" key="Dashboard">
                   Dashboard
                 </DropdownItem>
               ) : (

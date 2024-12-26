@@ -24,9 +24,9 @@ const SuccessStories = () => {
 
   return (
     <div className="py-10 w-full bg-gray-100 dark:bg-gray-900">
-      <div className="container mx-auto px-4">
+      <div className="w-11/12 mx-auto">
         <h2 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-gray-100">
-          Success Stories
+          Stories
         </h2>
         <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3 sm:grid-cols-1">
           {testimonials.map((testimonial, index) => (

@@ -1,4 +1,4 @@
-import Image from "next/image";
+
 import { TPet } from "@/globalInterface/interface";
 import { Example } from "./custom-slider";
 import "./custom-slider.css"

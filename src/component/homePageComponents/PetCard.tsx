@@ -15,7 +15,7 @@ const PetCard = ({ pet }: { pet: TPet }) => {
   const dispatch = useAppDispatch();
 
   return (
-    <Card className="py-4 px-2 xl:w-full sm:w-72 w-full mx-auto">
+    <Card className="py-4 px-2 xl:w-full sm:w-72 w-full mx-auto hover:shadow-xl">
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
         <p className="text-tiny uppercase font-bold">Name : {pet.name}</p>
         <small className="text-default-500">Age : {pet.age}</small>

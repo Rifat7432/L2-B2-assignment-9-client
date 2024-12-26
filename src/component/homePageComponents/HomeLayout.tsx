@@ -14,18 +14,17 @@ import { removeDuplicates } from "@/utils/removeDublicat";
 import WhyAdopt from "./WhyAdopt";
 import AdoptionProcessOverview from "./AdoptionProcess";
 
-
 const HomeLayout = () => {
   const query = useAppSelector((state) => state.pet.querys);
   const { data: pets, isLoading } = useGetAllPetsQuery(query);
-  const { data: petsQuery } = useGetAllPetsQuery({});
+  const { data: petsQuery, isLoading: isQueryLoading } = useGetAllPetsQuery({});
   const { register, handleSubmit } = useForm();
   const dispatch = useAppDispatch();
   const onSubmit = (data: FieldValues) => {
     const { searchTerm, ...rest } = query;
     dispatch(setQuery({ ...data, ...rest }));
   };
-  if (isLoading) {
+  if (isLoading || isQueryLoading) {
     return (
       <div className="w-[90%] mt-96 mx-auto flex flex-col items-center justify-center">
         <Spinner size="lg" />
@@ -38,7 +37,7 @@ const HomeLayout = () => {
   const filteredArraySpecies: string[] = removeDuplicates(
     petsQuery?.data.map((element: TPet) => element.species)
   );
- 
+
   const species = filteredArraySpecies.map((species: string) => {
     return { key: species, label: species.toUpperCase() };
   });
@@ -46,7 +45,7 @@ const HomeLayout = () => {
     return { key: size, label: size.toUpperCase() };
   });
   const handleProvinceChange = (element: TQuery) => {
-      const { searchTerm, gender, species, size } = query;
+    const { searchTerm, gender, species, size } = query;
     if (element?.gender) {
       dispatch(
         setQuery({
@@ -107,65 +106,67 @@ const HomeLayout = () => {
   };
   return (
     <div className="w-full mx-auto">
-      <div className="w-11/12 mx-auto my-10 rounded-xl">
-        <Slider pets={pets?.data}></Slider>
+      <div className="w-full mx-auto relative mb-5">
+        <div className="">
+          <Slider pets={petsQuery?.data}></Slider>
+        </div>
+        <div className=" gap-4 w-11/12 absolute rounded-xl z-30 left-[4%] right-[4%] bottom-[10%]  p-4 shadow-md bg-opacity-95">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              {...register("searchTerm")}
+              className="max-w-4xl"
+              color="primary"
+              radius="lg"
+              label="Search"
+              placeholder="Type to search..."
+              endContent={
+                <Button
+                  className="focus:outline-none"
+                  color="primary"
+                  variant="light"
+                  type="submit"
+                >
+                  <SearchIcon className="text-2xl text-default-400 pointer-events-none" />
+                </Button>
+              }
+            />
+          </form>
+          <div className="flex gap-4 w-full md:w-3/4 my-2">
+            <Select
+              size={"sm"}
+              label="Pet Species"
+              placeholder="Select a species"
+              onChange={(e) =>
+                handleProvinceChange({ species: e.target.value })
+              }
+            >
+              {species.map((species: { key: string; label: string }) => (
+                <SelectItem key={species.key}>{species.label}</SelectItem>
+              ))}
+            </Select>
+            <Select
+              size={"sm"}
+              label="Pet Gender"
+              placeholder="Select a gender"
+              onChange={(e) => handleProvinceChange({ gender: e.target.value })}
+            >
+              <SelectItem key={"MALE"}>{"Male"}</SelectItem>
+              <SelectItem key={"FEMALE"}>{"Female"}</SelectItem>
+            </Select>
+            <Select
+              size={"sm"}
+              label="Pet Size"
+              placeholder="Select a size"
+              onChange={(e) => handleProvinceChange({ size: e.target.value })}
+            >
+              {sizes.map((size: { key: string; label: string }) => (
+                <SelectItem key={size.key}>{size.label}</SelectItem>
+              ))}
+            </Select>
+          </div>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          {...register("searchTerm")}
-          className=" mx-auto max-w-2xl my-10 w-11/12"
-          color="primary"
-          radius="lg"
-          label="Search"
-          variant="bordered"
-          placeholder="Type to search..."
-          endContent={
-            <Button
-              className="focus:outline-none"
-              color="primary"
-              variant="light"
-              type="submit"
-            >
-              <SearchIcon className="text-2xl text-default-400 pointer-events-none" />
-            </Button>
-          }
-        />
-      </form>
-      <div className="w-11/12 mx-auto my-5 grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
-        <Select
-          size={"lg"}
-          label="Pet Species"
-          placeholder="Select a species"
-          className="max-w-xs"
-          onChange={(e) => handleProvinceChange({ species: e.target.value })}
-        >
-          {species.map((species: { key: string; label: string }) => (
-            <SelectItem key={species.key}>{species.label}</SelectItem>
-          ))}
-        </Select>
-        <Select
-          size={"lg"}
-          label="Pet Gender"
-          placeholder="Select a gender"
-          className="max-w-xs"
-          onChange={(e) => handleProvinceChange({ gender: e.target.value })}
-        >
-          <SelectItem key={"MALE"}>{"Male"}</SelectItem>
-          <SelectItem key={"FEMALE"}>{"Female"}</SelectItem>
-        </Select>
-        <Select
-          size={"lg"}
-          label="Pet Size"
-          placeholder="Select a size"
-          className="max-w-xs"
-          onChange={(e) => handleProvinceChange({ size: e.target.value })}
-        >
-          {sizes.map((size: { key: string; label: string }) => (
-            <SelectItem key={size.key}>{size.label}</SelectItem>
-          ))}
-        </Select>
-      </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:grid-cols-1 gap-6 w-11/12 mx-auto my-10">
         {pets?.data.map((pet: TPet) => (
           <PetCard key={pet.id} pet={pet} />
@@ -173,8 +174,8 @@ const HomeLayout = () => {
       </div>
       <SuccessStories />
       <AdoptionTips />
-      <WhyAdopt/>
-      <AdoptionProcessOverview/>
+      <WhyAdopt />
+      <AdoptionProcessOverview />
     </div>
   );
 };

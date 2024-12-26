@@ -1,12 +1,11 @@
-import { Image } from "@nextui-org/react";
-
+import Image from "next/image";
 
 const WhyAdopt = () => {
   return (
     <section className="py-10">
-      <div className="container mx-auto px-4">
+      <div className="w-11/12 mx-auto">
         <h2 className="text-3xl font-bold text-center mb-8">Why Adopt?</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div>
             <p className=" mb-4">
               Adopting a pet saves lives. Millions of animals need loving homes,
@@ -20,12 +19,13 @@ const WhyAdopt = () => {
               and loyalty.
             </p>
           </div>
-          <div className="w-96 mx-auto">
+          <div className=" h-48 justify-center flex">
             <Image
-              src="https://res.cloudinary.com/dqbtjunza/image/upload/v1729260969/pet-img_hcmfih.jpg" // Free image from Pexels
-            
+              src="https://res.cloudinary.com/dqbtjunza/image/upload/v1729260969/pet-img_hcmfih.jpg"
               alt="Why Adopt"
-              className="rounded-lg shadow-md "
+              className="rounded-lg shadow-md h-48"
+              width={500}
+              height={192}
             />
           </div>
         </div>
