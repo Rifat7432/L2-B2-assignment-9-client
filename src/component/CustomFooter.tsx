@@ -1,10 +1,15 @@
+import { Image } from "@nextui-org/react";
 import { Facebook, Twitter, Instagram, Mail, Phone } from "lucide-react";
 const CustomFooter = () => {
   return (
     <footer className="bg-gray-800 text-white p-4 w-full mt-20">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-[1350px] my-5">
         <div>
-          <h2 className="font-bold text-xl">Bark Buddies</h2>
+        <Image
+            alt="bark buddies logo"
+            src="https://res.cloudinary.com/dqbtjunza/image/upload/v1735236611/bark-buddies-logo-removebg-preview-copy_ena37f.png"
+            className="w-[200px] h-[100px] my-4"
+          />
           <p className="text-sm">
             At Pet Adoption, our mission is to connect loving families with pets
             in need of a home. We believe every animal deserves a chance to live

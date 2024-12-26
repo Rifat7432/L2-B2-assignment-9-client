@@ -47,9 +47,13 @@ const PetDetailCard = ({ params }: { params: { petId: string } }) => {
               <ImageSlider images={pet.photos}></ImageSlider>
             </CardHeader>
             <CardBody>
+              <div>
+                <p className="capitalize font-semibold text-2xl sm:text-4xl">
+                  Name : {pet.name}
+                </p>
+              </div>
               <div className="py-5 px-4 flex flex-col sm:flex-row justify-between gap-4 items-start">
                 <div>
-                  <p className="capitalize font-semibold">Name : {pet.name}</p>
                   <p className="capitalize font-semibold">Age : {pet.age}</p>
                   <h4 className="capitalize font-semibold">
                     Breed : {pet.breed}
@@ -62,8 +66,7 @@ const PetDetailCard = ({ params }: { params: { petId: string } }) => {
                   <p className="capitalize font-semibold">size : {pet.size}</p>
                 </div>
               </div>
-
-              <div className="flex px-4 items-center justify-between">
+              <div className="flex px-4 sm:flex-row flex-col items-start justify-between">
                 <div>
                   <h4 className="text-small font-semibold leading-none text-default-600 py-1">
                     Location : {pet.location}
@@ -88,46 +91,51 @@ const PetDetailCard = ({ params }: { params: { petId: string } }) => {
               ) : (
                 ""
               )}
-
               <h5 className="text-small tracking-tight text-default-400 py-2 px-4">
                 {pet.description}
               </h5>
             </CardBody>
           </Card>
-          {otherPets.map((pet: TPet) => (
-            <div
-              key={pet.id}
-              className="flex flex-col sm:flex-row dark:bg-slate-800 justify-start  shadow-lg rounded-lg w-11/12 mx-auto my-5 px-6 gap-x-6 h-52 max-w-[1000px] items-center capitalize"
-            >
-              <div className="h-44 overflow-hidden">
-                <Image
-                  alt="Album cover"
-                  className="object-cover h-44"
-                  shadow="md"
-                  src={pet.photos[0]}
-                />
-              </div>
-              <div>
+          {otherPets.length > 0 ? (
+            otherPets.map((pet: TPet) => (
+              <div
+                key={pet.id}
+                className="flex flex-col sm:flex-row dark:bg-slate-800 justify-start  shadow-lg rounded-lg w-11/12 mx-auto my-5 px-6 gap-x-6 h-52 max-w-[1000px] items-center capitalize"
+              >
+                <div className="h-44 overflow-hidden">
+                  <Image
+                    alt="Album cover"
+                    className="object-cover h-44"
+                    shadow="md"
+                    src={pet.photos[0]}
+                  />
+                </div>
                 <div>
-                  <Link
-                    href={`/pets/${pet.id}`}
-                    color="foreground"
-                    underline="hover"
-                    className="text-2xl font-semibold
+                  <div>
+                    <Link
+                      href={`/pets/${pet.id}`}
+                      color="foreground"
+                      underline="hover"
+                      className="text-2xl font-semibold
                 "
-                  >
-                    {pet.name}
-                  </Link>
-                </div>
+                    >
+                      {pet.name}
+                    </Link>
+                  </div>
 
-                <div className="flex gap-x-6 text-small ">
-                  <h2>Age : {pet.age}</h2>
-                  <h2>Breed : {pet.breed}</h2>
-                  <h2>Species : {pet.species}</h2>
+                  <div className="flex gap-x-6 text-small ">
+                    <h2>Age : {pet.age}</h2>
+                    <h2>Breed : {pet.breed}</h2>
+                    <h2>Species : {pet.species}</h2>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-center sm:text-4xl text-xl mx-auto w-11/22 mt-28">
+              No similar Pet Found
+            </p>
+          )}
         </div>
       ) : (
         <p className="text-center mx-auto w-11/22 mt-20">Not Found</p>

@@ -11,36 +11,55 @@ import {
   Link,
   Navbar,
   Button,
+  Image,
 } from "@nextui-org/react";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks/hooks";
 import { isCollapsed, logOut } from "@/redux/features/auth/authSlice";
 import { ChevronLeft, Menu, PawPrint } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 const CustomNavbar = () => {
   const { user, collapsed } = useAppSelector((state) => state.auth);
+  const sidebarNotShowPaths = ["/", "/about", "/login", "/register", "/pets"];
+  const pathname = usePathname();
   const dispatch = useAppDispatch();
+  console.log();
   return (
     <Navbar className="bg-opacity-25 shadow-md fixed top-0">
-      <NavbarContent className="md:hidden">
-        {collapsed ? (
-          <ChevronLeft
-            onClick={() => dispatch(isCollapsed(false))}
-          ></ChevronLeft>
-        ) : (
-          <Menu onClick={() => dispatch(isCollapsed(true))}></Menu>
-        )}
-      </NavbarContent>
+      {pathname.includes("/pets") ? (
+        ""
+      ) : sidebarNotShowPaths.includes(pathname) ? (
+        ""
+      ) : (
+        <NavbarContent
+        className="md:hidden"
+        >
+          {collapsed ? (
+            <ChevronLeft
+              onClick={() => dispatch(isCollapsed(false))}
+            ></ChevronLeft>
+          ) : (
+            <Menu onClick={() => dispatch(isCollapsed(true))}></Menu>
+          )}
+        </NavbarContent>
+      )}
+
       <NavbarBrand>
-        <div className="flex">
-          <PawPrint strokeWidth={2.5} className="w-full mx-1" />
-          <p className="font-bold text-inherit">Bark Buddies</p>
+        <div className="flex items-center">
+          <Image
+            alt="bark buddies logo"
+            src="https://res.cloudinary.com/dqbtjunza/image/upload/v1735236796/bark-buddies-logo-removebg-preview_wmcjdb.png"
+            className="w-[112px] h-[56px]"
+          />
+          <p className="font-bold text-inherit">
+            <span className="text-[#89BECF]">Bark</span> Buddies
+          </p>
         </div>
       </NavbarBrand>
 
-
       <NavbarContent as="div" justify="end">
-      <NavbarItem className="hidden sm:block">
+        <NavbarItem className="hidden sm:block">
           <Button as={Link} href="/" color="primary" variant="light">
             Home
           </Button>
@@ -62,7 +81,7 @@ const CustomNavbar = () => {
                 Register
               </Button>
             </NavbarItem>
-            <div className="hidden sm:block">
+            <div className="hidden md:block">
               <ThemeSwitcher />
             </div>
           </>
@@ -110,8 +129,8 @@ const CustomNavbar = () => {
                   Dashboard
                 </DropdownItem>
               ) : (
-                <DropdownItem as={Link} key="profile" href="/profile">
-                  My Profile
+                <DropdownItem as={Link} key="profile" href="/userOverview">
+                  Overview
                 </DropdownItem>
               )}
 

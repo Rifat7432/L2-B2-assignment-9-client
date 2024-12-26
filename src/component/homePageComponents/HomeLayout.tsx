@@ -110,7 +110,15 @@ const HomeLayout = () => {
         <div className="">
           <Slider pets={petsQuery?.data}></Slider>
         </div>
-        <div className=" gap-4 w-11/12 absolute rounded-xl z-30 left-[4%] right-[4%] bottom-[10%]  p-4 shadow-md bg-opacity-95">
+        <div className=" gap-4 w-3/5 mx-auto sm:w-[85%] absolute rounded-xl z-30 left-[5%]  right-[5%] bottom-[10%] p-4  bg-opacity-95">
+          <div className="w-full mb-10">
+            <h2 className="font-medium text-slate-900 dark:text-slate-200 text-2xl md:text-5xl">
+              Find Your Perfect Companion
+            </h2>
+            <p className="font-medium w-full my-4 text-slate-900 dark:text-slate-200 text-md md:text-xl">
+              Find and Welcome Home a New Friend.
+            </p>
+          </div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Input
               {...register("searchTerm")}
@@ -118,7 +126,7 @@ const HomeLayout = () => {
               color="primary"
               radius="lg"
               label="Search"
-              placeholder="Type to search..."
+              placeholder="Type to search pets by age, breed and location"
               endContent={
                 <Button
                   className="focus:outline-none"
@@ -131,11 +139,12 @@ const HomeLayout = () => {
               }
             />
           </form>
-          <div className="flex gap-4 w-full md:w-3/4 my-2">
+          <div className="flex flex-wrap sm:flex-nowrap gap-4 w-full md:w-3/4 my-2">
             <Select
               size={"sm"}
               label="Pet Species"
               placeholder="Select a species"
+              //   className="md:max-w-xs w-full"
               onChange={(e) =>
                 handleProvinceChange({ species: e.target.value })
               }
@@ -148,6 +157,7 @@ const HomeLayout = () => {
               size={"sm"}
               label="Pet Gender"
               placeholder="Select a gender"
+              //   className="md:max-w-xs w-full"
               onChange={(e) => handleProvinceChange({ gender: e.target.value })}
             >
               <SelectItem key={"MALE"}>{"Male"}</SelectItem>
@@ -156,6 +166,7 @@ const HomeLayout = () => {
             <Select
               size={"sm"}
               label="Pet Size"
+              //   className="md:max-w-xs w-full"
               placeholder="Select a size"
               onChange={(e) => handleProvinceChange({ size: e.target.value })}
             >

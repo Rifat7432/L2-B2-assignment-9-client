@@ -13,6 +13,7 @@ import {
 import { useGetAllAdoptionRequestQuery } from "@/redux/features/adopt/adoptApi";
 import { BarChart } from "@mui/x-charts";
 import { TAdminUser } from "@/globalInterface/interface";
+import AdminDashboardLayout from "./AdminDashboardLayout";
 
 const AdminOverview = () => {
   const navigate = useRouter();
@@ -134,11 +135,10 @@ const AdminOverview = () => {
                   area: true,
                 },
               ]}
-             
-              height={500}
+              height={400}
             />
             <div className="mx-auto w-11/12 text-center text-xl font-bold my-10">
-            Total Pets VS. Total Adopted Pets
+              Total Pets VS. Total Adopted Pets
             </div>
           </div>
           <div className="hidden sm:block md:hidden">
@@ -154,7 +154,6 @@ const AdminOverview = () => {
                   area: true,
                 },
               ]}
-              
               height={300}
             />
             <div className="mx-auto w-11/12 text-center text-xl font-bold my-10">
@@ -174,11 +173,10 @@ const AdminOverview = () => {
                   area: true,
                 },
               ]}
-            
               height={250}
             />
             <div className="mx-auto w-11/12 text-center text-xl font-bold my-10">
-            Total Pets VS. Total Adopted Pets
+              Total Pets VS. Total Adopted Pets
             </div>
           </div>
         </div>
@@ -203,7 +201,7 @@ const AdminOverview = () => {
                   ],
                 },
               ]}
-              height={500}
+              height={400}
               xAxis={[
                 {
                   data: [
@@ -270,7 +268,7 @@ const AdminOverview = () => {
               ]}
             />{" "}
             <div className="mx-auto w-11/12 text-center text-xl font-bold my-10">
-            Total User VS. Month
+              Total User VS. Month
             </div>
           </div>
           <div className="block sm:hidden">
@@ -315,10 +313,13 @@ const AdminOverview = () => {
               ]}
             />
             <div className="mx-auto w-11/12 text-center text-xl font-bold my-10">
-            Total User VS. Month
+              Total User VS. Month
             </div>
           </div>
         </div>
+      </div>
+      <div className="dark:bg-slate-800 ">
+        <AdminDashboardLayout />
       </div>
     </div>
   );

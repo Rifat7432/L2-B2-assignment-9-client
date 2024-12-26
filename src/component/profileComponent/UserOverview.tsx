@@ -117,7 +117,7 @@ const UserOverview = () => {
                   area: true,
                 },
               ]}
-              height={500}
+              height={400}
             />
             <div className="mx-auto w-11/12 text-center text-xl font-bold my-10">
               Total Adoption Request VS. My Adopted Pets
@@ -183,7 +183,7 @@ const UserOverview = () => {
                   ],
                 },
               ]}
-              height={500}
+              height={400}
               xAxis={[
                 {
                   data: [

@@ -79,10 +79,10 @@ export const Example = ({images}:{images:string[]}) => {
           }}
         />
       </AnimatePresence>
-      <div className="next" onClick={() => paginate(1)}>
+      <div className="next z-50" onClick={() => paginate(1)}>
         {"‣"}
       </div>
-      <div className="prev" onClick={() => paginate(-1)}>
+      <div className="prev z-50" onClick={() => paginate(-1)}>
         {"‣"}
       </div>
     </>
