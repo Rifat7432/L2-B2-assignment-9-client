@@ -118,6 +118,7 @@ const UserOverview = () => {
                 },
               ]}
               height={400}
+              grid={{ vertical: true, horizontal: true }}
             />
             <div className="mx-auto w-11/12 text-center text-xl font-bold my-10">
               Total Adoption Request VS. My Adopted Pets
@@ -137,6 +138,7 @@ const UserOverview = () => {
                 },
               ]}
               height={300}
+              grid={{ vertical: true, horizontal: true }}
             />
             <div className="mx-auto w-11/12 text-center text-xl font-bold my-10">
               Total Adoption Request VS. My Adopted Pets
@@ -156,6 +158,7 @@ const UserOverview = () => {
                 },
               ]}
               height={250}
+              grid={{ vertical: true, horizontal: true }}
             />
             <div className="mx-auto w-11/12 text-center text-xl font-bold my-10">
               Total Adoption Request VS. My Adopted Pets
@@ -184,6 +187,7 @@ const UserOverview = () => {
                 },
               ]}
               height={400}
+              grid={{ vertical: true, horizontal: true }}
               xAxis={[
                 {
                   data: [
@@ -229,6 +233,7 @@ const UserOverview = () => {
                 },
               ]}
               height={300}
+              grid={{ vertical: true, horizontal: true }}
               xAxis={[
                 {
                   data: [
@@ -274,6 +279,7 @@ const UserOverview = () => {
                 },
               ]}
               height={250}
+              grid={{ vertical: true, horizontal: true }}
               xAxis={[
                 {
                   data: [

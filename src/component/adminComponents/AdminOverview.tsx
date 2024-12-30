@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks/hooks";
 import { toast } from "sonner";
 import { useGetAllUsersQuery } from "@/redux/features/auth/authApi";
-import { Spinner } from "@nextui-org/react";
+import { Spinner, User } from "@nextui-org/react";
 import {
   useGetAdminOverviewQuery,
   useGetAllPetsQuery,
@@ -14,6 +14,10 @@ import { useGetAllAdoptionRequestQuery } from "@/redux/features/adopt/adoptApi";
 import { BarChart } from "@mui/x-charts";
 import { TAdminUser } from "@/globalInterface/interface";
 import AdminDashboardLayout from "./AdminDashboardLayout";
+import dashboardUserImage from "@/assets/dashboaedUser.png";
+import dashboardPetImage from "@/assets/dashbordPetImg.jpeg";
+import dashboardRequestImage from "@/assets/requesImg.jpg";
+import Image from "next/image";
 
 const AdminOverview = () => {
   const navigate = useRouter();
@@ -93,36 +97,94 @@ const AdminOverview = () => {
     }
   });
   return (
-    <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
-        <div className="shadow-xl w-11/12 m-5 p-5 rounded-lg dark:bg-slate-900">
-          <div className="text-xl font-bold">Total Adoption Request</div>
-          <div>
-            <h4 className="text-xl pl-4 font-semibold">
-              <CountUp end={Number(totalPetsRequest)} duration={4}></CountUp>
-            </h4>
-          </div>
+    <div className="w-11/12 mx-auto">
+      <div className="">
+        <div className="w-11/12 mx-auto dark:bg-slate-800 rounded-lg bg-slate-200 m-5 p-5">
+          <User
+            avatarProps={{
+              src: `${user?.photo}`,
+            }}
+            description={user?.role}
+            name={user?.email}
+          />
         </div>
-        <div className="shadow-xl w-11/12 m-5 p-5 rounded-lg dark:bg-slate-900">
-          <div className="text-xl font-bold">Total Pets</div>
-          <div>
-            <h4 className="text-xl pl-4 font-semibold">
-              <CountUp end={Number(totalRemainPet)} duration={4}></CountUp>
-            </h4>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+          <div className="shadow-xl hover:bg-[#02D5D1] w-11/12 m-5 p-5 dark:bg-slate-800 rounded-lg bg-slate-200">
+            <div className="flex gap-2 items-center">
+              <div className="relative">
+                <Image
+                  src={dashboardRequestImage}
+                  alt="dashboardUserImage"
+                  width={40}
+                  height={40}
+                  className="w-10 h-10 rounded-lg"
+                />
+              </div>
+              <div>
+                <div className="text-xl font-bold">Total Adoption Request</div>
+                <div>
+                  <h4 className="text-xl pl-4 font-semibold">
+                    <CountUp
+                      end={Number(totalPetsRequest)}
+                      duration={4}
+                    ></CountUp>
+                  </h4>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="shadow-xl w-11/12 m-5 p-5 rounded-lg dark:bg-slate-900">
-          <div className="text-xl font-bold">Total User</div>
-          <div>
-            <h4 className="text-xl pl-4 font-semibold">
-              <CountUp end={Number(totalUsers)} duration={4}></CountUp>
-            </h4>
+          <div className="shadow-xl hover:bg-[#02D5D1] w-11/12 m-5 p-5 dark:bg-slate-800 rounded-lg bg-slate-200">
+            <div className="flex gap-2 items-center">
+              <div className="relative">
+                <Image
+                  src={dashboardPetImage}
+                  alt="dashboardUserImage"
+                  width={40}
+                  height={40}
+                  className="w-10 h-10 rounded-lg"
+                />
+              </div>
+              <div>
+                <div className="text-xl font-bold">Total Pets</div>
+                <div>
+                  <h4 className="text-xl pl-4 font-semibold">
+                    <CountUp
+                      end={Number(totalRemainPet)}
+                      duration={4}
+                    ></CountUp>
+                  </h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="shadow-xl hover:bg-[#02D5D1] w-11/12 m-5 p-5 dark:bg-slate-800 rounded-lg bg-slate-200">
+            <div className="flex gap-2 items-center">
+              <div className="relative">
+                <Image
+                  src={dashboardUserImage}
+                  alt="dashboardUserImage"
+                  width={40}
+                  height={40}
+                  className="w-10 h-10 rounded-lg"
+                />
+              </div>
+              <div>
+                <div className="text-xl font-bold">Total User</div>
+                <div>
+                  <h4 className="text-xl pl-4 font-semibold">
+                    <CountUp end={Number(totalUsers)} duration={4}></CountUp>
+                  </h4>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div className="dark:bg-slate-800 grid grid-cols-1 lg:grid-cols-2 gap-5 p-5">
+
+      <div className=" grid grid-cols-1 lg:grid-cols-2 gap-5 py-5">
         <div>
-          <div className="hidden md:block">
+          <div className="hidden md:block dark:bg-slate-800 rounded-lg bg-slate-200 py-4">
             <LineChart
               xAxis={[
                 {
@@ -135,13 +197,14 @@ const AdminOverview = () => {
                   area: true,
                 },
               ]}
+              grid={{ vertical: true, horizontal: true }}
               height={400}
             />
             <div className="mx-auto w-11/12 text-center text-xl font-bold my-10">
               Total Pets VS. Total Adopted Pets
             </div>
           </div>
-          <div className="hidden sm:block md:hidden">
+          <div className="hidden sm:block md:hidden dark:bg-slate-800 rounded-lg bg-slate-200 py-4">
             <LineChart
               xAxis={[
                 {
@@ -155,12 +218,13 @@ const AdminOverview = () => {
                 },
               ]}
               height={300}
+              grid={{ vertical: true, horizontal: true }}
             />
             <div className="mx-auto w-11/12 text-center text-xl font-bold my-10">
               Total Pets VS. Total Adopted Pets
             </div>
           </div>
-          <div className="block sm:hidden">
+          <div className="block sm:hidden dark:bg-slate-800 rounded-lg bg-slate-200 py-4">
             <LineChart
               xAxis={[
                 {
@@ -174,6 +238,7 @@ const AdminOverview = () => {
                 },
               ]}
               height={250}
+              grid={{ vertical: true, horizontal: true }}
             />
             <div className="mx-auto w-11/12 text-center text-xl font-bold my-10">
               Total Pets VS. Total Adopted Pets
@@ -181,7 +246,7 @@ const AdminOverview = () => {
           </div>
         </div>
         <div>
-          <div className="hidden md:block">
+          <div className="hidden md:block dark:bg-slate-800 rounded-lg bg-slate-200 py-4">
             <BarChart
               series={[
                 {
@@ -202,6 +267,7 @@ const AdminOverview = () => {
                 },
               ]}
               height={400}
+              grid={{ vertical: true, horizontal: true }}
               xAxis={[
                 {
                   data: [
@@ -226,7 +292,7 @@ const AdminOverview = () => {
               Total User VS. Month
             </div>
           </div>
-          <div className="hidden sm:block md:hidden">
+          <div className="hidden sm:block md:hidden dark:bg-slate-800 rounded-lg bg-slate-200 py-4">
             <BarChart
               series={[
                 {
@@ -247,6 +313,7 @@ const AdminOverview = () => {
                 },
               ]}
               height={300}
+              grid={{ vertical: true, horizontal: true }}
               xAxis={[
                 {
                   data: [
@@ -271,7 +338,7 @@ const AdminOverview = () => {
               Total User VS. Month
             </div>
           </div>
-          <div className="block sm:hidden">
+          <div className="block sm:hidden dark:bg-slate-800 rounded-lg bg-slate-200 py-4">
             <BarChart
               series={[
                 {
@@ -292,6 +359,7 @@ const AdminOverview = () => {
                 },
               ]}
               height={250}
+              grid={{ vertical: true, horizontal: true }}
               xAxis={[
                 {
                   data: [
@@ -318,7 +386,7 @@ const AdminOverview = () => {
           </div>
         </div>
       </div>
-      <div className="dark:bg-slate-800 ">
+      <div className="dark:bg-slate-800 rounded-lg bg-slate-200">
         <AdminDashboardLayout />
       </div>
     </div>
