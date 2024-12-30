@@ -1,6 +1,6 @@
 "use client";
 import { FieldValues, useForm } from "react-hook-form";
-import { Input, Button } from "@nextui-org/react";
+import { Input, Button, Link } from "@nextui-org/react";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import React, { useRef } from "react";
@@ -8,6 +8,8 @@ import { useSignUpMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { TResponse, TUserLoginData } from "@/globalInterface/interface";
+import Image from "next/image";
+import loginImage from "@/assets/login-page-image.png"
 const RegisterForm = () => {
   const {
     register,
@@ -57,9 +59,12 @@ const RegisterForm = () => {
   };
   const toggleVisibility = () => setIsVisible(!isVisible);
   return (
-    <div className="max-w-['1000px'] flex items-center lg:w-2/4 md:w-3/4 w-11/12 rounded-lg mx-auto my-20 justify-center bg-cover bg-center bg-[url('https://i.ibb.co/JswfHyT/download-3.jpg')]">
-      <div className="bg-slate-300 dark:bg-opacity-20 bg-opacity-80 p-8 rounded-lg max-w-md w-full text-center shadow-lg outline-slate-50 md:m-32 sm:m-20">
-        <h2 className="text-xl w-11/12 my-5 ">Register</h2>
+    <div className="flex">
+      <div className="shrink">
+        <Image width={3000} height={2000} className="h-full w-full hidden sm:flex" src={loginImage} alt="login" />
+      </div>
+      <div className="px-8 py-12 w-full text-center outline-slate-50  sm:min-w-[416px]">
+        <h2 className="text-xl w-11/12 my-8">Register A New Account</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="flex flex-col items-start">
             <Input
@@ -68,7 +73,7 @@ const RegisterForm = () => {
                 required: "Name is required",
               })}
               fullWidth
-              placeholder="Enter your name"
+              variant="underlined"
               className="mb-6"
             />
             {errors.name && (
@@ -84,7 +89,7 @@ const RegisterForm = () => {
                 required: "Email is required",
               })}
               fullWidth
-              placeholder="Enter your email"
+              variant="underlined"
               className="mb-6"
             />
             {errors.email && (
@@ -98,6 +103,7 @@ const RegisterForm = () => {
               readOnly
               label="Upload Photo"
               placeholder="Choose a image..."
+              variant="underlined"
               value={img ? img.name : ""}
               className="cursor-pointer"
             />
@@ -125,7 +131,7 @@ const RegisterForm = () => {
                 required: "Password is required",
               })}
               fullWidth
-              placeholder="Enter your password"
+              variant="underlined"
               endContent={
                 <button
                   className="focus:outline-none"
@@ -147,6 +153,7 @@ const RegisterForm = () => {
           <Button
             type="submit"
             color="primary"
+            className="w-11/12 mx-auto"
             onClick={() => {
               if (!img) {
                 return setImgError("Image is equire");
@@ -158,6 +165,14 @@ const RegisterForm = () => {
             Register
           </Button>
         </form>
+        <div className="w-full my-5">
+          <p>
+            Already have account{" "}
+            <Link href="/login" underline="hover">
+              Login
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

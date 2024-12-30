@@ -21,7 +21,7 @@ const WhyAdopt = () => {
           </div>
           <div className=" h-48 justify-center flex">
             <Image
-              src="https://res.cloudinary.com/dqbtjunza/image/upload/v1729260969/pet-img_hcmfih.jpg"
+              src="https://res.cloudinary.com/dqbtjunza/image/upload/v1735553531/cat-4778387_1920_w6gass.jpg"
               alt="Why Adopt"
               className="rounded-lg shadow-md h-48"
               width={500}

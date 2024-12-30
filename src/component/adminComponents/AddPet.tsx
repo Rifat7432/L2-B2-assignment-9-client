@@ -2,7 +2,14 @@
 import { TPet, TResponse } from "@/globalInterface/interface";
 import { useCreatePetMutation } from "@/redux/features/pet/petApi";
 import { useAppSelector } from "@/redux/hooks/hooks";
-import { Button, Input, Select, SelectItem, Textarea } from "@nextui-org/react";
+import {
+  Button,
+  Divider,
+  Input,
+  Select,
+  SelectItem,
+  Textarea,
+} from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
@@ -27,7 +34,7 @@ const AddPet = () => {
     navigate.push("/login");
   } else {
     if (user.role !== "ADMIN") {
-     navigate.push("/");
+      navigate.push("/");
     }
   }
   let imgInputValue = "";
@@ -113,34 +120,45 @@ const AddPet = () => {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-6 w-full my-12"
+        className="space-y-6 w-11/12 mx-auto my-12 "
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-11/12 mx-auto">
+        <div className="text-center py-5">
+          <h1 className="sm:text-lg md:text-2xl lg:text-4xl font-semibold">
+            Fill The Form With Pet`s Information To Crate A Pet
+          </h1>
+        </div>
+        <div className="space-y-1">
+          <h4 className="text-medium font-medium">Pet Name</h4>
+        </div>
+        <Divider className="my-4" />
+        <div>
+          <Input
+            label="Pet Name"
+            {...register("name", {
+              required: "Pet Name is required",
+            })}
+            variant="bordered"
+            className="mb-6 sm:max-w-3xl w-full"
+          />
+          {errors.name && (
+            <p className="text-red-600 text-xs">
+              {errors?.name?.message as string}
+            </p>
+          )}
+        </div>
+        <div className="space-y-1">
+          <h4 className="text-medium font-medium">Pet Characteristics</h4>
+        </div>
+        <Divider className="my-4" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Input
-              label="Pet Name"
-              {...register("name", {
-                required: "Pet Name is required",
-              })}
-              fullWidth
-              placeholder="Enter Pet Name"
-              className="mb-6"
-            />
-            {errors.name && (
-              <p className="text-red-600 text-xs">
-                {errors?.name?.message as string}
-              </p>
-            )}
-          </div>
-          <div>
-            {" "}
             <Input
               label="Pet Species"
               {...register("species", {
                 required: "Pet Species is required",
               })}
               fullWidth
-              placeholder="Enter Pet Species"
+              variant="bordered"
               className="mb-6"
             />
             {errors.species && (
@@ -149,8 +167,6 @@ const AddPet = () => {
               </p>
             )}
           </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-11/12 mx-auto">
           <div>
             <Input
               label="Pet Breed"
@@ -158,7 +174,7 @@ const AddPet = () => {
                 required: "Pet Breed is required",
               })}
               fullWidth
-              placeholder="Enter Pet Breed"
+              variant="bordered"
               className="mb-6"
             />
             {errors.breed && (
@@ -169,29 +185,12 @@ const AddPet = () => {
           </div>
           <div>
             <Input
-              label="Pet Age"
-              {...register("age", { required: "Pet Age is required" })}
-              type="number"
-              fullWidth
-              placeholder="Enter Pet Age"
-              className="mb-6"
-            />
-            {errors.age && (
-              <p className="text-red-600 text-xs">
-                {errors?.age?.message as string}
-              </p>
-            )}
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-11/12 mx-auto">
-          <div>
-            <Input
               label="Pet Size"
               {...register("size", {
                 required: "Pet Size is required",
               })}
               fullWidth
-              placeholder="Enter Pet Size"
+              variant="bordered"
               className="mb-6"
             />
             {errors.size && (
@@ -202,22 +201,62 @@ const AddPet = () => {
           </div>
           <div>
             <Input
-              label="Pet Current Location"
-              {...register("location", {
-                required: "Current Location is required",
-              })}
+              label="Pet Age"
+              {...register("age", { required: "Pet Age is required" })}
+              type="number"
               fullWidth
-              placeholder="Enter Current Location"
+              variant="bordered"
               className="mb-6"
             />
-            {errors.location && (
+            {errors.age && (
               <p className="text-red-600 text-xs">
-                {errors?.location?.message as string}
+                {errors?.age?.message as string}
               </p>
             )}
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-11/12 mx-auto">
+        <div className="space-y-1">
+          <h4 className="text-medium font-medium">Pet Image</h4>
+          <p className="text-small text-default-400">
+            Upload at least three images
+          </p>
+        </div>
+        <Divider className="my-4" />
+        <div>
+          <div
+            onClick={handleFileClick}
+            className="cursor-pointer sm:max-w-3xl"
+          >
+            <Input
+              readOnly
+              label="Upload Pet Photos"
+              placeholder="Choose a image..."
+              value={img ? imgInputValue : ""}
+              className="cursor-pointer sm:max-w-3xl"
+            />
+            {imgError && (
+              <p className="text-red-600 text-xs">{imgError as string}</p>
+            )}
+          </div>
+          <input
+            multiple
+            type="file"
+            style={{ display: "none" }}
+            ref={fileInputRef}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const allImg = [...img, file];
+                setImg(allImg);
+              }
+            }}
+          />
+        </div>
+        <div className="space-y-1">
+          <h4 className="text-medium font-medium">Pet Attributes</h4>
+        </div>
+        <Divider className="my-4" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <Input
               label="Pet Temperament"
@@ -225,7 +264,7 @@ const AddPet = () => {
                 required: "Pet Temperament is required",
               })}
               fullWidth
-              placeholder="Enter Pet Temperament"
+              variant="bordered"
               className="mb-6"
             />
             {errors.temperament && (
@@ -241,7 +280,7 @@ const AddPet = () => {
                 required: "Pet Health Status is required",
               })}
               fullWidth
-              placeholder="Enter Pet Health Status"
+              variant="bordered"
               className="mb-6"
             />
             {errors.medicalHistory && (
@@ -250,52 +289,6 @@ const AddPet = () => {
               </p>
             )}
           </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-11/12 mx-auto">
-          <div>
-            <Input
-              label="Pet Adoption Terms"
-              {...register("adoptionTerms", {
-                required: "Pet Adoption Terms is required",
-              })}
-              fullWidth
-              placeholder="Enter Pet Adoption Terms"
-              className="mb-6"
-            />
-            {errors.adoptionTerms && (
-              <p className="text-red-600 text-xs">
-                {errors?.adoptionTerms?.message as string}
-              </p>
-            )}
-          </div>
-          <div onClick={handleFileClick}>
-            <Input
-              readOnly
-              label="Upload Pet Photos"
-              placeholder="Choose a image..."
-              value={img ? imgInputValue : ""}
-              className="cursor-pointer"
-            />
-            {imgError && (
-              <p className="text-red-600 text-xs">{imgError as string}</p>
-            )}
-          </div>
-        </div>
-
-        <input
-          multiple
-          type="file"
-          style={{ display: "none" }}
-          ref={fileInputRef}
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) {
-              const allImg = [...img, file];
-              setImg(allImg);
-            }
-          }}
-        />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-11/12 mx-auto">
           <div>
             <Select
               {...register("gender", {
@@ -317,9 +310,50 @@ const AddPet = () => {
               </p>
             )}
           </div>
-          <div></div>
         </div>
-        <div className=" w-11/12 mx-auto">
+        <div className="space-y-1">
+          <h4 className="text-medium font-medium">Adoption Details</h4>
+        </div>
+        <Divider className="my-4" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Input
+              label="Pet Current Location"
+              {...register("location", {
+                required: "Current Location is required",
+              })}
+              fullWidth
+              variant="bordered"
+              className="mb-6"
+            />
+            {errors.location && (
+              <p className="text-red-600 text-xs">
+                {errors?.location?.message as string}
+              </p>
+            )}
+          </div>
+          <div>
+            <Input
+              label="Pet Adoption Terms"
+              {...register("adoptionTerms", {
+                required: "Pet Adoption Terms is required",
+              })}
+              fullWidth
+              variant="bordered"
+              className="mb-6"
+            />
+            {errors.adoptionTerms && (
+              <p className="text-red-600 text-xs">
+                {errors?.adoptionTerms?.message as string}
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="space-y-1">
+          <h4 className="text-medium font-medium">Pet Details</h4>
+        </div>
+        <Divider className="my-4" />
+        <div>
           <Textarea
             variant="bordered"
             label="Detailed Description"
@@ -327,7 +361,6 @@ const AddPet = () => {
               required: "Detailed Description is required",
             })}
             fullWidth
-            placeholder="Enter Detailed Description"
             className="mb-6"
             disableAnimation
             disableAutosize
@@ -341,19 +374,22 @@ const AddPet = () => {
             </p>
           )}
         </div>
-        <Button
-          type="submit"
-          color="primary"
-          onClick={() => {
-            if (!img.length) {
-              return setImgError("Maximum Three Images Require");
-            }
-            setImgError("");
-          }}
-          isLoading={isLoading}
-        >
-          Add
-        </Button>
+        <div className="flex items-center justify-center space-y-1">
+          <Button
+            type="submit"
+            color="primary"
+            className="min-w-80 py-1 text-base"
+            onClick={() => {
+              if (!img.length) {
+                return setImgError("Maximum Three Images Require");
+              }
+              setImgError("");
+            }}
+            isLoading={isLoading}
+          >
+            Create A Pet
+          </Button>
+        </div>
       </form>
     </>
   );

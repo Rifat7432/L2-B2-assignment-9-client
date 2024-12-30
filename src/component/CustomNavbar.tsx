@@ -26,15 +26,13 @@ const CustomNavbar = () => {
   const dispatch = useAppDispatch();
   console.log();
   return (
-    <Navbar className="bg-opacity-25 shadow-md fixed top-0">
+    <Navbar className="bg-opacity-25 shadow-md fixed top-0 justify-around">
       {pathname.includes("/pets") ? (
         ""
       ) : sidebarNotShowPaths.includes(pathname) ? (
         ""
       ) : (
-        <NavbarContent
-        className="md:hidden"
-        >
+        <NavbarContent className="md:hidden">
           {collapsed ? (
             <ChevronLeft
               onClick={() => dispatch(isCollapsed(false))}
@@ -44,20 +42,20 @@ const CustomNavbar = () => {
           )}
         </NavbarContent>
       )}
-
-      <NavbarBrand>
-        <div className="flex items-center">
-          <Image
-            alt="bark buddies logo"
-            src="https://res.cloudinary.com/dqbtjunza/image/upload/v1735236796/bark-buddies-logo-removebg-preview_wmcjdb.png"
-            className="w-[112px] h-[56px]"
-          />
-          <p className="font-bold text-inherit">
-            <span className="text-[#89BECF]">Bark</span> Buddies
-          </p>
-        </div>
-      </NavbarBrand>
-
+      <NavbarContent as="div" justify="start">
+        <NavbarBrand as={Link} href="/">
+          <div className="flex items-center">
+            <Image
+              alt="bark buddies logo"
+              src="https://res.cloudinary.com/dqbtjunza/image/upload/v1735236796/bark-buddies-logo-removebg-preview_wmcjdb.png"
+              className="w-[112px] h-[56px]"
+            />
+            <p className="font-bold text-black dark:text-white">
+              <span className="text-[#89BECF]">Bark</span> Buddies
+            </p>
+          </div>
+        </NavbarBrand>
+      </NavbarContent>
       <NavbarContent as="div" justify="end">
         <NavbarItem className="hidden sm:block">
           <Button as={Link} href="/" color="primary" variant="light">
@@ -74,11 +72,6 @@ const CustomNavbar = () => {
             <NavbarItem className="hidden sm:block">
               <Button as={Link} color="primary" href="/login" variant="flat">
                 Login
-              </Button>
-            </NavbarItem>
-            <NavbarItem className="hidden sm:block">
-              <Button as={Link} color="primary" href="/register" variant="flat">
-                Register
               </Button>
             </NavbarItem>
             <div className="hidden md:block">

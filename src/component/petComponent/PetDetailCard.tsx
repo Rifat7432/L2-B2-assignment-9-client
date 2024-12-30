@@ -86,7 +86,7 @@ const PetDetailCard = ({ params }: { params: { petId: string } }) => {
                   isDisabled={user === null}
                   className="mt-5 w-11/12"
                 >
-                  Adopt
+                  Adoption Request
                 </Button>
               ) : (
                 ""

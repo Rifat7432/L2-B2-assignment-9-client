@@ -9,6 +9,7 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  Link,
 } from "@nextui-org/react";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
@@ -19,7 +20,8 @@ import { jwtDecode } from "jwt-decode";
 import { useAppDispatch } from "@/redux/hooks/hooks";
 import { storToken, storUserData } from "@/redux/features/auth/authSlice";
 import { TResponse, TUserLoginData } from "@/globalInterface/interface";
-
+import Image from "next/image";
+import loginImage from "@/assets/login-page-img-cat.png";
 const LoginForm = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -77,9 +79,18 @@ const LoginForm = () => {
   };
   const toggleVisibility = () => setIsVisible(!isVisible);
   return (
-    <div className="max-w-['1000px'] flex items-center lg:w-2/4 md:w-3/4 w-11/12 rounded-lg mx-auto my-20 justify-center bg-cover bg-center bg-[url('https://i.ibb.co/fDwj3bd/images.jpg')]">
-      <div className="bg-slate-300 dark:bg-opacity-30 bg-opacity-90 p-8 rounded-lg max-w-md w-full text-center shadow-lg outline-slate-50 md:m-32 sm:m-20">
-        <h2 className="text-xl dark:text-slate-900 w-11/12 my-5">Login</h2>
+    <div className="flex">
+      <div className="shrink">
+        <Image
+          width={1920}
+          height={1920}
+          className="h-full w-full hidden sm:flex object-cover"
+          src={loginImage}
+          alt="login"
+        />
+      </div>
+      <div className="px-8 py-12 mt-20 w-full text-center outline-slate-50  sm:max-w-[416px]">
+        <h2 className="text-xl w-11/12 my-5">Login</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="flex flex-col items-start">
             <Input
@@ -88,7 +99,7 @@ const LoginForm = () => {
                 required: "Email is required",
               })}
               fullWidth
-              placeholder="Enter your email"
+              variant="underlined"
               className="mb-6"
             />
             {errors.email && (
@@ -105,7 +116,7 @@ const LoginForm = () => {
                 required: "Password is required",
               })}
               fullWidth
-              placeholder="Enter your password"
+              variant="underlined"
               endContent={
                 <button
                   className="focus:outline-none"
@@ -134,6 +145,14 @@ const LoginForm = () => {
             Login
           </Button>
         </form>
+        <div className="w-full my-5">
+          <p>
+            New to Bark Buddies{" "}
+            <Link href="/register" underline="hover">
+              Create an account
+            </Link>
+          </p>
+        </div>
         <Button
           className="w-11/12 my-2"
           color="primary"

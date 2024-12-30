@@ -1,63 +1,86 @@
-import {  Image } from "@nextui-org/react";
-
+"use client";
+import { Accordion, AccordionItem } from "@nextui-org/react";
+import adoptionImage from "@/assets/adoption-prosses.png";
+import Image from "next/image";
 const AdoptionTips = () => {
   const tips = [
     {
       title: "Consider Your Lifestyle",
       description:
         "Think about your daily routine and how a pet will fit into it. Different pets have different needs.",
-      image:
-        "https://res.cloudinary.com/dqbtjunza/image/upload/v1735040451/pet-lifestayl_v3bc38.jpg",
     },
     {
-      title: "Research Breeds",
+      title: "Choose the Right Pet",
       description:
-        "Research different breeds to find one that matches your lifestyle and personality.",
-      image:
-        "https://res.cloudinary.com/dqbtjunza/image/upload/v1735041015/breed_t1gyfu.jpg",
+        "Research various pet breeds and species to find one that matches your personality, space, and energy level.",
     },
     {
-      title: "Prepare Your Home",
+      title: "Provide Proper Nutrition",
       description:
-        "Make sure your home is pet-friendly and you have all the necessary supplies before bringing a pet home.",
-      image:
-        "https://res.cloudinary.com/dqbtjunza/image/upload/v1735041104/pet-home_hsmzut.jpg",
+        "Ensure your pet has a balanced diet appropriate for their species, age, and health requirements.",
     },
-    // Add more tips as needed
+    {
+      title: "Schedule Regular Vet Visits",
+      description:
+        "Regular check-ups help maintain your pet's health and catch any potential issues early.",
+    },
+    {
+      title: "Create a Safe Environment",
+      description:
+        "Pet-proof your home to prevent accidents, and provide a designated area for your pet to rest and play.",
+    },
+    {
+      title: "Invest in Training and Socialization",
+      description:
+        "Teach your pet basic commands and expose them to different environments and people to improve their behavior.",
+    },
+    {
+      title: "Provide Mental and Physical Stimulation",
+      description:
+        "Engage your pet with toys, games, and exercise to keep them happy and healthy.",
+    },
+    {
+      title: "Show Love and Patience",
+      description:
+        "Build a bond with your pet through affection and understanding. Patience is key, especially during training.",
+    },
+    {
+      title: "Understand Lifelong Commitment",
+      description:
+        "Be prepared for the long-term responsibilities of owning a pet, including time, effort, and financial costs.",
+    },
   ];
 
   return (
-    <>
-      <div className="py-10 bg-white dark:bg-gray-900">
-        <div className="w-11/12 mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-gray-100">
-            Adoption Tips
-          </h2>
-          <div className="grid gap-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    <div className="py-10">
+      <h2 className="text-3xl font-bold text-center mb-8">
+        Tips For Rising A Pet
+      </h2>
+      <div className=" grid sm:grid-cols-2 w-11/12 mx-auto gap-4">
+        <div className="relative h-[640px]">
+          <Image
+            src={adoptionImage}
+            alt="adoption image"
+            width={640}
+            height={640}
+            className="h-full w-full rounded-xl"
+          />
+        </div>
+        <div className="flex items-center">
+          <Accordion defaultExpandedKeys={["0"]}>
             {tips.map((tip, index) => (
-              <div
+              <AccordionItem
                 key={index}
-                className="flex flex-col items-center bg-gray-100 w-11/12 mx-auto dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 overflow-hidden"
+                aria-label={tip.title}
+                title={tip.title}
               >
-                <Image
-                  src={tip.image}
-                  alt={tip.title}
-                  className=" object-cover"
-                />
-                <div>
-                  <h3 className="text-2xl font-semibold my-4 text-gray-900 dark:text-gray-100">
-                    {tip.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    {tip.description}
-                  </p>
-                </div>
-              </div>
+                {tip.description}
+              </AccordionItem>
             ))}
-          </div>
+          </Accordion>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

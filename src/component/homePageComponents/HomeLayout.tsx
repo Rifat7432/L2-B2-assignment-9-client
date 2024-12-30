@@ -13,6 +13,7 @@ import Slider from "../Slider/Slideer";
 import { removeDuplicates } from "@/utils/removeDublicat";
 import WhyAdopt from "./WhyAdopt";
 import AdoptionProcessOverview from "./AdoptionProcess";
+import SaveAnAnimal from "./SaveAnAnimal";
 
 const HomeLayout = () => {
   const query = useAppSelector((state) => state.pet.querys);
@@ -108,72 +109,76 @@ const HomeLayout = () => {
     <div className="w-full mx-auto">
       <div className="w-full mx-auto relative mb-5">
         <div className="">
-          <Slider pets={petsQuery?.data}></Slider>
+          <Slider></Slider>
         </div>
-        <div className=" gap-4 w-3/5 mx-auto sm:w-[85%] absolute rounded-xl z-30 left-[5%]  right-[5%] bottom-[10%] p-4  bg-opacity-95">
+        <div className=" gap-4 w-3/5 mx-auto sm:w-[85%] absolute rounded-xl z-30 left-[5%]  right-[5%] top-[10%] p-4  text-center">
           <div className="w-full mb-10">
-            <h2 className="font-medium text-slate-900 dark:text-slate-200 text-2xl md:text-5xl">
+            <h2 className="font-bold text-white text-2xl md:text-5xl">
               Find Your Perfect Companion
             </h2>
-            <p className="font-medium w-full my-4 text-slate-900 dark:text-slate-200 text-md md:text-xl">
+            <p className="font-medium w-full my-4 text-white text-md md:text-xl">
               Find and Welcome Home a New Friend.
             </p>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Input
-              {...register("searchTerm")}
-              className="max-w-4xl"
-              color="primary"
-              radius="lg"
-              label="Search"
-              placeholder="Type to search pets by age, breed and location"
-              endContent={
-                <Button
-                  className="focus:outline-none"
-                  color="primary"
-                  variant="light"
-                  type="submit"
-                >
-                  <SearchIcon className="text-2xl text-default-400 pointer-events-none" />
-                </Button>
-              }
-            />
-          </form>
-          <div className="flex flex-wrap sm:flex-nowrap gap-4 w-full md:w-3/4 my-2">
-            <Select
-              size={"sm"}
-              label="Pet Species"
-              placeholder="Select a species"
-              //   className="md:max-w-xs w-full"
-              onChange={(e) =>
-                handleProvinceChange({ species: e.target.value })
-              }
-            >
-              {species.map((species: { key: string; label: string }) => (
-                <SelectItem key={species.key}>{species.label}</SelectItem>
-              ))}
-            </Select>
-            <Select
-              size={"sm"}
-              label="Pet Gender"
-              placeholder="Select a gender"
-              //   className="md:max-w-xs w-full"
-              onChange={(e) => handleProvinceChange({ gender: e.target.value })}
-            >
-              <SelectItem key={"MALE"}>{"Male"}</SelectItem>
-              <SelectItem key={"FEMALE"}>{"Female"}</SelectItem>
-            </Select>
-            <Select
-              size={"sm"}
-              label="Pet Size"
-              //   className="md:max-w-xs w-full"
-              placeholder="Select a size"
-              onChange={(e) => handleProvinceChange({ size: e.target.value })}
-            >
-              {sizes.map((size: { key: string; label: string }) => (
-                <SelectItem key={size.key}>{size.label}</SelectItem>
-              ))}
-            </Select>
+          <div className="flex flex-col items-center justify-center bg-[#ecf0f0] rounded-lg p-5">
+            <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+              <Input
+                {...register("searchTerm")}
+                className="max-w-4xl w-full mx-auto"
+                
+                radius="sm"
+                label="Search"
+                placeholder="Type to search pets by age, breed and location"
+                endContent={
+                  <Button
+                    className="focus:outline-none"
+                    color="primary"
+                    variant="light"
+                    type="submit"
+                  >
+                    <SearchIcon className="text-2xl text-default-400 pointer-events-none" />
+                  </Button>
+                }
+              />
+            </form>
+            <div className="flex flex-wrap sm:flex-nowrap gap-4 w-full md:w-3/4 mt-2">
+              <Select
+                size={"sm"}
+                label="Pet Species"
+                placeholder="Select a species"
+                //   className="md:max-w-xs w-full"
+                onChange={(e) =>
+                  handleProvinceChange({ species: e.target.value })
+                }
+              >
+                {species.map((species: { key: string; label: string }) => (
+                  <SelectItem key={species.key}>{species.label}</SelectItem>
+                ))}
+              </Select>
+              <Select
+                size={"sm"}
+                label="Pet Gender"
+                placeholder="Select a gender"
+                //   className="md:max-w-xs w-full"
+                onChange={(e) =>
+                  handleProvinceChange({ gender: e.target.value })
+                }
+              >
+                <SelectItem key={"MALE"}>{"Male"}</SelectItem>
+                <SelectItem key={"FEMALE"}>{"Female"}</SelectItem>
+              </Select>
+              <Select
+                size={"sm"}
+                label="Pet Size"
+                //   className="md:max-w-xs w-full"
+                placeholder="Select a size"
+                onChange={(e) => handleProvinceChange({ size: e.target.value })}
+              >
+                {sizes.map((size: { key: string; label: string }) => (
+                  <SelectItem key={size.key}>{size.label}</SelectItem>
+                ))}
+              </Select>
+            </div>
           </div>
         </div>
       </div>
@@ -183,10 +188,11 @@ const HomeLayout = () => {
           <PetCard key={pet.id} pet={pet} />
         ))}
       </div>
-      <SuccessStories />
-      <AdoptionTips />
       <WhyAdopt />
+      <SuccessStories />
+      <SaveAnAnimal/>
       <AdoptionProcessOverview />
+      <AdoptionTips />
     </div>
   );
 };
