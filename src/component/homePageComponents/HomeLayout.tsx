@@ -14,10 +14,11 @@ import { removeDuplicates } from "@/utils/removeDublicat";
 import WhyAdopt from "./WhyAdopt";
 import AdoptionProcessOverview from "./AdoptionProcess";
 import SaveAnAnimal from "./SaveAnAnimal";
+import ServicesSection from "./services-section";
 
 const HomeLayout = () => {
   const query = useAppSelector((state) => state.pet.querys);
-  const { data: pets, isLoading } = useGetAllPetsQuery(query);
+  const { data: pets, isLoading,error } = useGetAllPetsQuery(query);
   const { data: petsQuery, isLoading: isQueryLoading } = useGetAllPetsQuery({});
   const { register, handleSubmit } = useForm();
   const dispatch = useAppDispatch();
@@ -105,6 +106,7 @@ const HomeLayout = () => {
       );
     }
   };
+  console.log(pets,error);
   return (
     <div className="w-full mx-auto">
       <div className="w-full mx-auto relative mb-5">
@@ -191,6 +193,7 @@ const HomeLayout = () => {
       <WhyAdopt />
       <SuccessStories />
       <SaveAnAnimal/>
+      <ServicesSection/>
       <AdoptionProcessOverview />
       <AdoptionTips />
     </div>

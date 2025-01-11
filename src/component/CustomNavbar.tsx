@@ -42,20 +42,20 @@ const CustomNavbar = () => {
           )}
         </NavbarContent>
       )}
-      <NavbarContent as="div" justify="start">
-        <NavbarBrand as={Link} href="/">
-          <div className="flex items-center">
-            <Image
-              alt="bark buddies logo"
-              src="https://res.cloudinary.com/dqbtjunza/image/upload/v1735236796/bark-buddies-logo-removebg-preview_wmcjdb.png"
-              className="w-[112px] h-[56px]"
-            />
-            <p className="font-bold text-black dark:text-white">
-              <span className="text-[#89BECF]">Bark</span> Buddies
-            </p>
-          </div>
-        </NavbarBrand>
-      </NavbarContent>
+
+      <NavbarBrand as={Link} href="/">
+        <div className="flex items-center">
+          <Image
+            alt="bark buddies logo"
+            src="https://res.cloudinary.com/dqbtjunza/image/upload/v1735236796/bark-buddies-logo-removebg-preview_wmcjdb.png"
+            className="w-[112px] h-[56px]"
+          />
+          <p className="font-bold text-black dark:text-white">
+            <span className="text-[#89BECF]">Bark</span> Buddies
+          </p>
+        </div>
+      </NavbarBrand>
+
       <NavbarContent as="div" justify="end">
         <NavbarItem className="hidden sm:block">
           <Button as={Link} href="/" color="primary" variant="light">

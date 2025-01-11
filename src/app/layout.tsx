@@ -5,6 +5,7 @@ import Providers from "@/lib/Provider";
 import CustomNavbar from "@/component/CustomNavbar";
 import CustomFooter from "@/component/CustomFooter";
 
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

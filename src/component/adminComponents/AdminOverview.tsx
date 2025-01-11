@@ -4,20 +4,17 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks/hooks";
 import { toast } from "sonner";
-import { useGetAllUsersQuery } from "@/redux/features/auth/authApi";
-import { Spinner, User } from "@nextui-org/react";
-import {
-  useGetAdminOverviewQuery,
-  useGetAllPetsQuery,
-} from "@/redux/features/pet/petApi";
-import { useGetAllAdoptionRequestQuery } from "@/redux/features/adopt/adoptApi";
-import { BarChart } from "@mui/x-charts";
+
+import { Avatar, Spinner } from "@nextui-org/react";
+import { useGetAdminOverviewQuery } from "@/redux/features/pet/petApi";
+import { BarChart, PieChart } from "@mui/x-charts";
 import { TAdminUser } from "@/globalInterface/interface";
 import AdminDashboardLayout from "./AdminDashboardLayout";
 import dashboardUserImage from "@/assets/dashboaedUser.png";
 import dashboardPetImage from "@/assets/dashbordPetImg.jpeg";
 import dashboardRequestImage from "@/assets/requesImg.jpg";
 import Image from "next/image";
+import { useGetProfileQuery } from "@/redux/features/auth/authApi";
 
 const AdminOverview = () => {
   const navigate = useRouter();
@@ -30,8 +27,11 @@ const AdminOverview = () => {
       navigate.push("/");
     }
   }
-  const { data, isLoading, error } = useGetAdminOverviewQuery(undefined);
-  if (isLoading) {
+  const { data: adminProfile, isLoading: profileLoading } = useGetProfileQuery(
+    {}
+  );
+  const { data, isLoading } = useGetAdminOverviewQuery(undefined);
+  if (isLoading || profileLoading) {
     return (
       <div className="w-[90%] mt-96 mx-auto flex flex-col items-center justify-center">
         <Spinner size="lg" />
@@ -97,28 +97,50 @@ const AdminOverview = () => {
     }
   });
   return (
-    <div className="w-11/12 mx-auto">
+    <div className="w-full md:w-11/12 mx-auto py-5">
       <div className="">
-        <div className="w-11/12 mx-auto dark:bg-slate-800 rounded-lg bg-slate-200 m-5 p-5">
-          <User
-            avatarProps={{
-              src: `${user?.photo}`,
-            }}
-            description={user?.role}
-            name={user?.email}
-          />
+        <div className="flex items-center md:flex-row flex-col justify-around dark:bg-slate-800 rounded-lg bg-slate-100 mb-5 p-5">
+          <div className="flex gap-4">
+            <Avatar size="lg" src={user?.photo} />
+            <div>
+              <p><span className="bold">{adminProfile?.data?.name}</span> as {user?.role}</p>
+              <p>{user?.email}</p>
+            </div>
+          </div>
+
+          <div className="overflow-hidden sm:block hidden">
+            <PieChart
+              series={[
+                {
+                  data: [
+                    { id: 0, value: totalRemainPet, label: "Total Pets" },
+                    {
+                      id: 1,
+                      value: totalPetsRequest,
+                      label: "Total Adoption Request",
+                    },
+                    { id: 2, value: totalUsers, label: "Total User" },
+                  ],
+                  innerRadius: 10,
+                  outerRadius: 50,
+                },
+              ]}
+              width={500}
+              height={100}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
-          <div className="shadow-xl hover:bg-[#02D5D1] w-11/12 m-5 p-5 dark:bg-slate-800 rounded-lg bg-slate-200">
+          <div className=" hover:bg-[#02D5D1]  p-5 dark:bg-slate-800 rounded-lg bg-slate-100">
             <div className="flex gap-2 items-center">
               <div className="relative">
                 <Image
                   src={dashboardRequestImage}
                   alt="dashboardUserImage"
-                  width={40}
-                  height={40}
-                  className="w-10 h-10 rounded-lg"
+                  width={112}
+                  height={80}
+                  className="w-28 h-20 rounded-lg"
                 />
               </div>
               <div>
@@ -134,15 +156,15 @@ const AdminOverview = () => {
               </div>
             </div>
           </div>
-          <div className="shadow-xl hover:bg-[#02D5D1] w-11/12 m-5 p-5 dark:bg-slate-800 rounded-lg bg-slate-200">
+          <div className=" hover:bg-[#02D5D1]  p-5 dark:bg-slate-800 rounded-lg bg-slate-100">
             <div className="flex gap-2 items-center">
               <div className="relative">
                 <Image
                   src={dashboardPetImage}
                   alt="dashboardUserImage"
-                  width={40}
-                  height={40}
-                  className="w-10 h-10 rounded-lg"
+                  width={96}
+                  height={80}
+                  className="w-24 h-20 rounded-lg"
                 />
               </div>
               <div>
@@ -158,15 +180,15 @@ const AdminOverview = () => {
               </div>
             </div>
           </div>
-          <div className="shadow-xl hover:bg-[#02D5D1] w-11/12 m-5 p-5 dark:bg-slate-800 rounded-lg bg-slate-200">
+          <div className=" hover:bg-[#02D5D1]  p-5 dark:bg-slate-800 rounded-lg bg-slate-100">
             <div className="flex gap-2 items-center">
               <div className="relative">
                 <Image
                   src={dashboardUserImage}
                   alt="dashboardUserImage"
-                  width={40}
-                  height={40}
-                  className="w-10 h-10 rounded-lg"
+                  width={80}
+                  height={80}
+                  className="w-20 h-20 rounded-lg"
                 />
               </div>
               <div>
@@ -184,7 +206,7 @@ const AdminOverview = () => {
 
       <div className=" grid grid-cols-1 lg:grid-cols-2 gap-5 py-5">
         <div>
-          <div className="hidden md:block dark:bg-slate-800 rounded-lg bg-slate-200 py-4">
+          <div className="hidden md:block dark:bg-slate-800 rounded-lg bg-slate-100 py-4">
             <LineChart
               xAxis={[
                 {
@@ -204,7 +226,7 @@ const AdminOverview = () => {
               Total Pets VS. Total Adopted Pets
             </div>
           </div>
-          <div className="hidden sm:block md:hidden dark:bg-slate-800 rounded-lg bg-slate-200 py-4">
+          <div className="hidden sm:block md:hidden dark:bg-slate-800 rounded-lg bg-slate-100 py-4">
             <LineChart
               xAxis={[
                 {
@@ -224,7 +246,7 @@ const AdminOverview = () => {
               Total Pets VS. Total Adopted Pets
             </div>
           </div>
-          <div className="block sm:hidden dark:bg-slate-800 rounded-lg bg-slate-200 py-4">
+          <div className="block sm:hidden dark:bg-slate-800 rounded-lg bg-slate-100 py-4">
             <LineChart
               xAxis={[
                 {
@@ -246,7 +268,7 @@ const AdminOverview = () => {
           </div>
         </div>
         <div>
-          <div className="hidden md:block dark:bg-slate-800 rounded-lg bg-slate-200 py-4">
+          <div className="hidden md:block dark:bg-slate-800 rounded-lg bg-slate-100 py-4">
             <BarChart
               series={[
                 {
@@ -292,7 +314,7 @@ const AdminOverview = () => {
               Total User VS. Month
             </div>
           </div>
-          <div className="hidden sm:block md:hidden dark:bg-slate-800 rounded-lg bg-slate-200 py-4">
+          <div className="hidden sm:block md:hidden dark:bg-slate-800 rounded-lg bg-slate-100 py-4">
             <BarChart
               series={[
                 {
@@ -338,7 +360,7 @@ const AdminOverview = () => {
               Total User VS. Month
             </div>
           </div>
-          <div className="block sm:hidden dark:bg-slate-800 rounded-lg bg-slate-200 py-4">
+          <div className="block sm:hidden dark:bg-slate-800 rounded-lg bg-slate-100 py-4">
             <BarChart
               series={[
                 {
@@ -386,7 +408,7 @@ const AdminOverview = () => {
           </div>
         </div>
       </div>
-      <div className="dark:bg-slate-800 rounded-lg bg-slate-200">
+      <div className="dark:bg-slate-800 rounded-lg bg-slate-100">
         <AdminDashboardLayout />
       </div>
     </div>

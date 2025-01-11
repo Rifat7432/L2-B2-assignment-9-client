@@ -89,6 +89,8 @@ const AddPet = () => {
     }
     userData.age = Number(userData.age);
     userData.specialNeeds = false;
+    userData.species = userData.species.toUpperCase();
+    userData.size = userData.size.toUpperCase();
     try {
       const res = (await add(userData)) as TResponse<TPet>;
       if (res?.error && !res?.error?.data?.success) {

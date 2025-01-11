@@ -5,13 +5,12 @@ import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks/hooks";
 import { toast } from "sonner";
 import { Spinner } from "@nextui-org/react";
-import {
-  useGetAllAdoptedPetsQuery,
-  useGetAllUnapprovedAdoptedRequestQuery,
-} from "@/redux/features/adopt/adoptApi";
 import { BarChart } from "@mui/x-charts";
 import { useGetUserOverviewQuery } from "@/redux/features/pet/petApi";
-import { TAdopt, TResponse } from "@/globalInterface/interface";
+import { TAdopt } from "@/globalInterface/interface";
+import Image from "next/image";
+import dashboardPetImage from "@/assets/dashbordPetImg.jpeg";
+import dashboardRequestImage from "@/assets/requesImg.jpg";
 
 const UserOverview = () => {
   const navigate = useRouter();
@@ -83,28 +82,57 @@ const UserOverview = () => {
   });
 
   return (
-    <div>
+    <div className="w-full md:w-11/12 mx-auto py-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8">
-        <div className="shadow-xl w-11/12 m-5 p-5 rounded-lg dark:bg-slate-900">
-          <div className="text-xl font-bold">Total Adoption Request</div>
-          <div>
-            <h4 className="text-xl pl-4 font-semibold">
-              <CountUp end={Number(totalPetsRequest)} duration={4}></CountUp>
-            </h4>
+        <div className=" hover:bg-[#02D5D1]  p-5 dark:bg-slate-800 rounded-lg bg-slate-100">
+          <div className="flex gap-4 items-center">
+            <div className="relative">
+              <Image
+                src={dashboardRequestImage}
+                alt="dashboardUserImage"
+                width={112}
+                height={80}
+                className="w-28 h-20 rounded-lg"
+              />
+            </div>
+            <div>
+              <div className="text-xl font-bold">Total Adoption Request</div>
+              <div>
+                <h4 className="text-xl pl-4 font-semibold">
+                  <CountUp
+                    end={Number(totalPetsRequest)}
+                    duration={4}
+                  ></CountUp>
+                </h4>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="shadow-xl w-11/12 m-5 p-5 rounded-lg dark:bg-slate-900">
-          <div className="text-xl font-bold">Total Pets</div>
-          <div>
-            <h4 className="text-xl pl-4 font-semibold">
-              <CountUp end={Number(totalPets)} duration={4}></CountUp>
-            </h4>
+        <div className=" hover:bg-[#02D5D1]  p-5 dark:bg-slate-800 rounded-lg bg-slate-100">
+          <div className="flex gap-4 items-center">
+            <div className="relative">
+              <Image
+                src={dashboardPetImage}
+                alt="dashboardUserImage"
+                width={96}
+                height={80}
+                className="w-24 h-20 rounded-lg"
+              />
+            </div>
+            <div>
+              <div className="text-xl font-bold">My Total Pets</div>
+              <div>
+                <h4 className="text-xl pl-4 font-semibold">
+                  <CountUp end={Number(totalPets)} duration={4}></CountUp>
+                </h4>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div className="dark:bg-slate-800 grid grid-cols-1 lg:grid-cols-2 gap-5 p-5">
+      <div className=" grid grid-cols-1 lg:grid-cols-2 gap-5 py-5">
         <div>
-          <div className="hidden md:block">
+          <div className="hidden md:block dark:bg-slate-800 rounded-lg bg-slate-100 py-4">
             <LineChart
               xAxis={[
                 {
@@ -124,7 +152,7 @@ const UserOverview = () => {
               Total Adoption Request VS. My Adopted Pets
             </div>
           </div>
-          <div className="hidden sm:block md:hidden">
+          <div className="hidden sm:block md:hidden dark:bg-slate-800 rounded-lg bg-slate-100 py-4">
             <LineChart
               xAxis={[
                 {
@@ -144,7 +172,7 @@ const UserOverview = () => {
               Total Adoption Request VS. My Adopted Pets
             </div>
           </div>
-          <div className="block sm:hidden">
+          <div className="block sm:hidden dark:bg-slate-800 rounded-lg bg-slate-100 py-4">
             <LineChart
               xAxis={[
                 {
@@ -166,7 +194,7 @@ const UserOverview = () => {
           </div>
         </div>
         <div>
-          <div className="hidden md:block">
+          <div className="hidden md:block dark:bg-slate-800 rounded-lg bg-slate-100 py-4">
             <BarChart
               series={[
                 {
@@ -212,7 +240,7 @@ const UserOverview = () => {
               Total Adoption Request VS. Month
             </div>
           </div>
-          <div className="hidden sm:block md:hidden">
+          <div className="hidden sm:block md:hidden dark:bg-slate-800 rounded-lg bg-slate-100 py-4">
             <BarChart
               series={[
                 {
@@ -258,7 +286,7 @@ const UserOverview = () => {
               Total Adoption Request VS. Month
             </div>
           </div>
-          <div className="block sm:hidden">
+          <div className="block sm:hidden dark:bg-slate-800 rounded-lg bg-slate-100 py-4">
             <BarChart
               series={[
                 {
